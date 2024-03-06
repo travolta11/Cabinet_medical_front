@@ -22,6 +22,18 @@ install packages with npm i
 npm run
 
 
+
+##Key Features:
+
+**User-Friendly Interface:** Our application boasts a user-friendly interface that empowers doctors to create prescriptions effortlessly with just a few clicks. The design prioritizes simplicity and efficiency, ensuring a seamless user experience.
+
+**Prescription Management:** The application's robust features enable doctors to efficiently manage appointments and patient information. Doctors can easily schedule appointments and organize patient records, streamlining their workflow for improved productivity.
+
+**Prescription History Access:** Accessing patients' prescription history is now at your fingertips. This feature facilitates easy tracking of previous treatments, allowing doctors to make informed decisions based on a comprehensive understanding of the patient's medical background.
+
+**Efficiency and Accuracy:** Our primary goal is to enhance the efficiency and accuracy of medical prescription management. By leveraging the latest technologies and incorporating best practices, we aim to optimize doctors' time, enabling them to focus on delivering high-quality care to their patients.
+
+**Data Security and Patient Confidentiality:** We prioritize the security of sensitive medical data and patient confidentiality. The application implements industry-standard security measures to ensure that patient information is protected and handled with the utmost care.
     
 ## Screenshots
 
