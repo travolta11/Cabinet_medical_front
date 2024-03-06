@@ -23,7 +23,7 @@ npm run
 
 
 
-##Key Features:
+## Key Features:
 
 **User-Friendly Interface:** Our application boasts a user-friendly interface that empowers doctors to create prescriptions effortlessly with just a few clicks. The design prioritizes simplicity and efficiency, ensuring a seamless user experience.
 
