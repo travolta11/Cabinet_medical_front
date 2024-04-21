@@ -1,8 +1,10 @@
-import {  Button,  Col, Form, Input,  Row, Select, Typography, } from 'antd';
+import {  Button,  Col, Form, Input,  Row, Select, Typography, Space, DatePicker } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Cookies from 'js-cookie';
+import moment from 'moment'; // Import moment.js library
 import axios from 'axios';
+
 
 const MyFormItemContext = React.createContext([]);
 
@@ -18,39 +20,19 @@ const MyFormItemGroup = ({ prefix, children }) => {
 
 
 
-const AjouterOrdonance = ({ onSubmit }) => {
+const AjouterTest = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
-    maladie: '',
-    description: '',
-  
     nomPatient: '',
-    nomMedicament: [],
+    nomTest: '',
+  
+    
+    maladie: '',
+    dateTest: '',
   });
 
 
 
-  //medicament
-  const [medicaments, setMedicaments] = useState([]);
-  const [selectedMedicament, setSelectedMedicament] = useState([]);
-
-  useEffect(() => {
-    axios
-      .get('/api/medicaments')
-      .then((response) => {
-        setMedicaments(response.data['hydra:member']);
-        console.log(response.data['hydra:member']);
-      })
-      .catch((error) => {
-        console.error('Error fetching medicaments:', error);
-        
-      });
-  }, []);
-
-  const handleSelectChange = (value, option) => {
-    const selectedMedicamentData = medicaments.filter((medicament) => value.includes(medicament.id));
-    setSelectedMedicament(selectedMedicamentData);
-  };
-
+ 
 
   //patient
   const [patients, setPatients] = useState([]);
@@ -110,19 +92,18 @@ const AjouterOrdonance = ({ onSubmit }) => {
         .then((response) => {
           userData = response.data;
   
-          const selectedMedicamentIds = selectedMedicament.map((medicament) => medicament.nom);
   
           const postData = {
             ...formData,
             createdAt: new Date().toISOString(),
             user: userData && userData.id ? `api/users/${userData.id}` : null,
             nomPatient: selectedPatient ? selectedPatient.nom : '',
-            nomMedicament: selectedMedicamentIds,
+            
             patient: selectedPatient ? `api/patients/${selectedPatient.id}` : null,
           };
   
           axios
-            .post('/api/ordonances', postData)
+            .post('/api/examentests', postData)
             .then((response) => {
               console.log(response.data);
               console.log("User ID:", userData && userData.id);
@@ -152,12 +133,12 @@ const AjouterOrdonance = ({ onSubmit }) => {
       transition={{ duration: 0.3, delay: 0.7 }}
     >
       <Form name="form_item_path" layout="vertical" onFinish={onFinish} form={form}>
-        <Typography.Title level={4}>Ajouter une ordonance</Typography.Title>
+        <Typography.Title level={4}>Ajouter un test</Typography.Title>
         <Row>
           <Col xs={{ span: 9, offset: 7 }}>
             <MyFormItemGroup prefix={['user']}>
               <MyFormItemGroup prefix={['name']}>
-               
+              
 
                 <MyFormItemGroup>
                   <Form.Item label="Selectionner un patient">
@@ -178,23 +159,24 @@ const AjouterOrdonance = ({ onSubmit }) => {
                     />
                   </Form.Item>
                   <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
-                    <Form.Item name="maladie" label="maladie" rules={[{ required: true, message: "Veuillez saisir la maladie!" }]}>
+                    <Form.Item name="nomTest" label="Nom de test" rules={[{ required: true, message: "Veuillez saisir le nom de test!" }]}>
+                      <Input value={formData.nomTest} onChange={(e) => handleInputChange('nomTest', e.target.value)} type="text" />
+                    </Form.Item>
+                  
+                 
+                    <Form.Item name="maladie" label="Maladie" rules={[{ required: true, message: "Veuillez saisir la maladie!" }]}>
                       <Input value={formData.maladie} onChange={(e) => handleInputChange('maladie', e.target.value)} type="text" />
                     </Form.Item>
                   </div>
-                  <Form.Item label="Selectionner un medicament">
-                    <Select
-                      mode="multiple"
-                      placeholder="Rechercher un medicament"
-                      onChange={handleSelectChange}
-                      options={medicaments.map((medicament) => ({
-                        value: medicament.id,
-                        label: medicament.nom,
-                      }))}
-                    />
-                  </Form.Item>
-                  <Form.Item name="description" label="description" rules={[{ required: true, message: "Veuillez saisir la description" }]}>
-                    <Input.TextArea value={formData.description} onChange={(e) => handleInputChange('description', e.target.value)} type="text" />
+                
+                  <Form.Item label="La date de test" name="dateTest">
+                    <Space direction="vertical" size={24}>
+                      <DatePicker
+                        showTime
+                        value={formData.dateTest ? moment(formData.dateTest) : null}
+                        onChange={(date, dateString) => handleInputChange('dateTest', dateString)}
+                      />
+                    </Space>
                   </Form.Item>
                 </MyFormItemGroup>
 
@@ -207,7 +189,7 @@ const AjouterOrdonance = ({ onSubmit }) => {
             <Form.Item>
 
 
-            <Button href="/ordonance" danger type="text">
+            <Button href="/examen" danger type="text">
               Annuler
             </Button>
               <Button onClick={handlePost} type="primary" htmlType="submit">
@@ -222,4 +204,4 @@ const AjouterOrdonance = ({ onSubmit }) => {
   );
 };
 
-export default AjouterOrdonance;
+export default AjouterTest;

@@ -1,23 +1,18 @@
-import {   Space, Table, Typography,Popconfirm,Button,Input  } from "antd";
-import { useEffect, useState,useRef } from "react";
+import {   Space, Table, Typography,Popconfirm,Button,Input } from "antd";
+import { useEffect, useState } from "react";
 import * as React from 'react';
 import { Col, Row } from 'antd';
 import { motion } from 'framer-motion';
-import { useNavigate, useParams } from 'react-router-dom';
-import Highlighter from 'react-highlight-words';
-import { SearchOutlined } from '@ant-design/icons';
 import axios from "axios";
-import Column from "antd/es/table/Column";
-import ModifierUtilisateur from './ModifierUtilisateur';
-import AjouterUtilisateur from "./AjouterUtilisateur";
+
+import { lazy} from "react";
 
 
-const DescriptionItem = ({ title, content }) => (
-  <div className="site-description-item-profile-wrapper">
-    <p className="site-description-item-profile-p-label">{title}:</p>
-    {content}
-  </div>
-);
+
+const AjouterUtilisateur = lazy(() => import("./AjouterUtilisateur"));
+const ModifierUtilisateur = lazy(() => import("./ModifierUtilisateur"));
+
+
 
 
 
@@ -25,24 +20,62 @@ const DescriptionItem = ({ title, content }) => (
 function Utilisateur() {
  
   
-
   const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
-  const searchInput = useRef(null);
   const [showTable, setShowTable] = useState(true); 
 
-  const handleAjouterClick = () => {
-    // Perform any necessary logic or data manipulation
-
-    // Redirect to a new page using React Router
-    
-  };
-  // const handleDelete = (key) => {
-  //   const newData = dataSource.filter((item) => item.key !== key);
-  //   setDataSource(newData);
-  // };
+  
+  
 
 //ajouterutilisateur
+const [currentPage, setCurrentPage] = useState(1);
+const [loading, setLoading] = useState(false);
+const [dataSource, setDataSource] = useState([]);
+
+const [pageSize, setPageSize] = useState(5);
+const [totalItems, setTotalItems] = useState(0);
+//Définition des états pour la pagination, le chargement, la source de données, la taille de page et le nombre total d'éléments.
+
+
+
+
+useEffect(() => {
+  const fetchUsers = () => {
+    const params = {
+      page: currentPage,
+      itemsPerPage: pageSize,
+      nom: searchText,
+      'order[created_at]': 'DESC'
+    };
+
+    axios
+      .get("/api/users?pagination=true", { params })
+      .then((response) => {
+        setDataSource(response.data['hydra:member']);
+        setTotalItems(response.data['hydra:totalItems']);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data from API:", error);
+        setLoading(false);
+      });
+  };
+
+  setLoading(true);
+  fetchUsers();
+}, [currentPage, pageSize, searchText]);
+
+//end
+// Manipilation de changment de table
+const handleTableChange = (pagination) => {
+  setCurrentPage(pagination.current);
+  setPageSize(pagination.pageSize);
+};
+const handleSearch = (value) => {
+  setCurrentPage(1);
+  setSearchText(value);
+ 
+};
+
 const [showAjouterForm, setShowAjouterForm] = useState(false);
 
 const handleAddClick = () => {
@@ -60,19 +93,7 @@ const handleAddClick = () => {
 
 
 
-// const handleAjouterFormSubmit = (values) => {
-   
-//   axios.post("http://127.0.0.1:8000/api/utilisateurs", values)
-//     .then(() => {
-//       // Update successful, perform any necessary logic or redirect
-      
-//       setShowAjouterForm(false);
-//       window.location.reload();
-//     })
-//     .catch((error) => {
-//       console.error('Error updating utilisateur:', error);
-//     });
-// };
+
 
 
 
@@ -99,7 +120,7 @@ const [selectedUtilisateurId, setSelectedUtilisateurId] = useState(null);
       nom: selectedUtilisateur.nom,
       adresse: selectedUtilisateur.adresse,
       tel: selectedUtilisateur.tel,
-      
+      specialite: selectedUtilisateur.specialite
     });
     setShowModifierForm(true);
     setShowAjouterForm(false);
@@ -107,11 +128,12 @@ const [selectedUtilisateurId, setSelectedUtilisateurId] = useState(null);
   };
 
   const handleModifierFormSubmit = (values) => {
-   
-    axios.put(`http://127.0.0.1:8000/api/users/${selectedUtilisateurId}`, values)
+    console.log(selectedUtilisateurId);
+    axios.put(`/api/users/${selectedUtilisateurId}`, values)
       .then(() => {
-        // Update successful, perform any necessary logic or redirect
+        
         setSelectedUtilisateurId(null);
+        
         setShowModifierForm(false);
         window.location.reload();
       })
@@ -126,15 +148,15 @@ const [selectedUtilisateurId, setSelectedUtilisateurId] = useState(null);
   const handleDelete = (key) => {
     setLoading(true);
     axios
-      .delete(`http://127.0.0.1:8000/api/users/${key}`)
+      .delete(`/api/users/${key}`)
       .then(() => {
-        // Delete successful, update the table data
-        setCurrentPage(1); // Reset to the first page
+        
+        setCurrentPage(1); 
         setLoading(false);
   
-        // Fetch the updated data after deletion
+        
         axios
-          .get(`http://127.0.0.1:8000/api/users?page=${currentPage}&limit=${pageSize}`)
+          .get(`/api/users?page=${currentPage}&limit=${pageSize}`)
           .then((response) => {
             setDataSource(response.data['hydra:member']);
             setTotalItems(response.data['hydra:totalItems']);
@@ -153,12 +175,7 @@ const [selectedUtilisateurId, setSelectedUtilisateurId] = useState(null);
 
 
 
-  const [loading, setLoading] = useState(false);
-  const [dataSource, setDataSource] = useState([]);
- 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
-  const [totalItems, setTotalItems] = useState(0);
+
   
 
 
@@ -166,144 +183,16 @@ const [selectedUtilisateurId, setSelectedUtilisateurId] = useState(null);
 
 
 
-  useEffect(() => {
-    setLoading(true);
-    axios
-      .get(`http://127.0.0.1:8000/api/users?page=${currentPage}&limit=${pageSize}`)
-      .then((response) => {
-        setDataSource(response.data['hydra:member']); // Update this line
-        setTotalItems(response.data['hydra:totalItems']); // Update this line
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching data from API:", error);
-        setLoading(false);
-      });
-  }, [currentPage, pageSize]);
+  
   
 
-
-  const handleTableChange = (pagination) => {
-    setCurrentPage(pagination.current);
-    setPageSize(pagination.pageSize);
-  };
-
-  const handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
-  };
-  const handleReset = (clearFilters) => {
-    clearFilters();
-    setSearchText('');
-  };
-  const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
-      <div
-        style={{
-          padding: 8,
-        }}
-        onKeyDown={(e) => e.stopPropagation()}
-      >
-        <Input
-          ref={searchInput}
-          placeholder={`Rechercher ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{
-            marginBottom: 8,
-            display: 'block',
-          }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{
-              width: 95,
-            }}
-          >
-            Recherche
-          </Button>
-          <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
-            style={{
-              width: 90,
-            }}
-          >
-            Réinitialiser
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              confirm({
-                closeDropdown: false,
-              });
-              setSearchText(selectedKeys[0]);
-              setSearchedColumn(dataIndex);
-            }}
-          >
-            Filtre
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            Fermer
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered) => (
-      <SearchOutlined
-        style={{
-          color: filtered ? '#1677ff' : undefined,
-        }}
-      />
-    ),
-    onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
-    },
-    render: (text) =>
-      searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{
-            backgroundColor: '#ffc069',
-            padding: 0,
-          }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ''}
-        />
-      ) : (
-        text
-      ),
-  });
-
-
-  const navigate = useNavigate();
 
   const columns = [
-    // Define your table columns here
-    // Example: { title: "Name", dataIndex: "name", key: "name" },
-    // { title: "id", dataIndex: "id", key: "id", width: '30%',
-    // },
+   
     { title: "Email", dataIndex: "email", key: "email" , width: '30%',
      },
     { title: "nom", dataIndex: "nom", key: "nom", width: '30%',
-    ...getColumnSearchProps(''),},
+    },
     
    
     
@@ -311,38 +200,30 @@ const [selectedUtilisateurId, setSelectedUtilisateurId] = useState(null);
      },
     { title: "Adresse", dataIndex: "adresse", key: "adresse" , width: '30%',
      },
-     { title: "Roles", dataIndex: "roles", key: "roles" , width: '30%',
+     { title: "Roles", dataIndex: "specialite", key: "specialite" , width: '30%',
      },
     
-      {
-        key: 'operation',
-        fixed: 'right',
-        width: 100,
-        render: (_, record) => (
-          <Button
-            type="primary"
-            onClick={() => handleModifyClick(record.id)} // Pass the ID to the click handhreler
-           
-
-          >
+     {
+      title: "Action",
+      fixed: 'right',
+      width: '200',
+      render: (_, record) => (
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <Button type="primary" onClick={() => handleModifyClick(record.id)}>
             Modifier
           </Button>
-        ),
-      }
-      ,
-      {
-        dataIndex: 'operation',
-        render: (_, record) =>
-          dataSource.length >= 1 ? (
-            <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.id)}>
-              <Button danger type="text">Supprimer</Button>
-            </Popconfirm>
-          ) : null,
-      }
-      ,
+          <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.id)}>
+            <Button danger>Supprimer</Button>
+          </Popconfirm>
+        </div>
+      ),
+    },
 
   ];
+    
+
   
+
   
  
   return (
@@ -377,13 +258,22 @@ transition={{duration : 0.3, delay: 0.7}}
     >
       <b>Ajouter un utilisateur</b>
     </Button>
- 
 
+    {/* la table des utilisateurs */}
+    
+    <Input.Search
+                style={{ width: '200px' }}
+                placeholder="Search by name"
+                onSearch={handleSearch}
+                enterButton
+              />
     
        <Table
         loading={loading}
         columns={columns}
         dataSource={dataSource}
+        onChange={handleTableChange}
+
         pagination={{
           current: currentPage,
           pageSize: pageSize,

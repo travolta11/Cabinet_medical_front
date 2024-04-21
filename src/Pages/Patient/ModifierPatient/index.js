@@ -1,18 +1,15 @@
-import {   AutoComplete,
+import {   
     Button,
-    Cascader,
-    Checkbox,
+    
     Col,
     Form,
     Input,
-    InputNumber,
     Row,
-    Select,Typography,Popconfirm } from 'antd';
+    Select,Typography} from 'antd';
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useState,useEffect } from 'react';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+
 
 const { Option } = Select;
 const MyFormItemContext = React.createContext([]);
@@ -24,14 +21,9 @@ const MyFormItemGroup = ({ prefix, children }) => {
   const concatPath = React.useMemo(() => [...prefixPath, ...toArr(prefix)], [prefixPath, prefix]);
   return <MyFormItemContext.Provider value={concatPath}>{children}</MyFormItemContext.Provider>;
 };
-const MyFormItem = ({ name, ...props }) => {
-  const prefixPath = React.useContext(MyFormItemContext);
-  const concatName = name !== undefined ? [...prefixPath, ...toArr(name)] : undefined;
-  return <Form.Item name={concatName} {...props} />;
-};
+
 const ModifierPatient  = ({ initialValues, onSubmit }) => {
-  const [formValues, setFormValues] = useState({});
-  const { id } = useParams();
+
   const [form] = Form.useForm();
   
   useEffect(() => {
@@ -78,6 +70,15 @@ transition={{duration : 0.3, delay: 0.7}}
         ]}> 
             <Input type= 'text' />
           </Form.Item>
+          <Form.Item name="cin" label="CIN"  rules={[
+          { 
+            
+            required: true,
+            message: 'Veuillez selectionner le nom!',
+          },
+        ]}> 
+            <Input type= 'text' />
+          </Form.Item>
           {/* <MyFormItem name="firstName" label="Prenom"  rules={[
           {
             required: true,
@@ -108,13 +109,7 @@ transition={{duration : 0.3, delay: 0.7}}
       </Form.Item>
         
         
-        <Form.Item name="age" label="Age"  rules={[
-          { 
-            
-            required: true,
-            message: "Veuillez saisir l'age!",
-          },
-        ]}>
+        <Form.Item name="age" label="Age" >
           <Input type="number" />
           
         </Form.Item></div></MyFormItemGroup>
@@ -122,12 +117,7 @@ transition={{duration : 0.3, delay: 0.7}}
         <Form.Item
         name="sexe"
         label="Sexe"
-        rules={[
-          { type:"text",
-            required: true,
-            message: 'Veuillez selectionner le sexe!',
-          },
-        ]}
+       
       >
         <Select placeholder="Veuillez selectionner le sexe!">
           <Option value="Masculin">Masculin</Option>
@@ -139,14 +129,7 @@ transition={{duration : 0.3, delay: 0.7}}
       <Form.Item
         name="tel"
         label="Tele"
-        rules={[
-          { 
-
-            
-            required: true,
-            message: 'Veuillez saisir votre numéro de telephone!',
-          },
-        ]}
+        
       >
         <Input type="text"
           
@@ -159,7 +142,6 @@ transition={{duration : 0.3, delay: 0.7}}
 
       <Form.Item name="adresse" label="Adresse"  rules={[
           { 
-            required: true,
             message: "Veuillez selectionner l'adresse!",
           },
         ]}> 
@@ -170,13 +152,13 @@ transition={{duration : 0.3, delay: 0.7}}
 
       </MyFormItemGroup>
       
-                  <Button danger type="text" href='/patient'>Annuler</Button>
-             
+      <Button  href="/patient" danger type="text"  >Annuler</Button>             
       <Button type="primary" htmlType="submit">
         Enregistrer
       </Button>
       </Col></Row>
     </Form></motion.div>
+   
   );
 };
 export default ModifierPatient ;

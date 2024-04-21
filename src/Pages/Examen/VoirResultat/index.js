@@ -19,19 +19,20 @@ const MyFormItemGroup = ({ prefix, children }) => {
 
 
 
-const VoirOrdonance = ({ initialValues, onSubmit, onMedicamentNamesChange }) => {
-  const [, setMedicaments] = useState([]);
- 
+const VoirResultat = ({ initialValues, onSubmit }) => {
+  const [, setExamenresultats] = useState([]);
 
+
+  
 
 
 
 
   useEffect(() => {
     axios
-      .get('/api/medicaments')
+      .get('/api/examenresultats')
       .then((response) => {
-        setMedicaments(response.data['hydra:member']);
+        setExamenresultats(response.data['hydra:member']);
         console.log(response.data['hydra:member']);
       
       })
@@ -39,7 +40,6 @@ const VoirOrdonance = ({ initialValues, onSubmit, onMedicamentNamesChange }) => 
         console.error('Error fetching medicaments:', error);
       });
   }, []);
-
 
 
   const [form] = Form.useForm();
@@ -60,18 +60,18 @@ const VoirOrdonance = ({ initialValues, onSubmit, onMedicamentNamesChange }) => 
       transition={{ duration: 0.3, delay: 0.7 }}
     >
       <Form name="form_item_path" layout="vertical" initialValues={initialValues} onFinish={onFinish}>
-        <Typography.Title level={4}>Ordonance</Typography.Title>
+        <Typography.Title level={4}>Resultat</Typography.Title>
         
         <Row>
           <Col xs={{ span: 9, offset: 0 }}>
             
         <MyFormItemGroup>
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
-            <Form.Item   name="nomPatient" label="Nom du patient" rules={[{  message: 'Veuillez sélectionner le nom!' }]}>
+            <Form.Item   name="nomPatient" label="Nom du patient" >
               <Input disabled type="text" style={{ color: "black", fontSize: "16px", borderColor: "black"  }} />
             </Form.Item>
          
-            <Form.Item name="maladie" label="Maladie" rules={[{  message: "Veuillez sélectionner l'adresse!" }]}>
+            <Form.Item name="maladie" label="Maladie" >
   <Input disabled type="text" style={{ color: "black", fontSize: "16px", borderColor: "black"  }} />
 </Form.Item>
 
@@ -84,12 +84,12 @@ const VoirOrdonance = ({ initialValues, onSubmit, onMedicamentNamesChange }) => 
           <Col xs={{ span: 9, offset: 0 }}>
         <MyFormItemGroup>
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
-        <Form.Item name="nomMedicament" label="Médicament">
+        <Form.Item name="nomTest" label="Nom de test">
         <Input disabled type="text" style={{ color: "black", fontSize: "16px", borderColor: "black"  }} />
 </Form.Item>
 
 
-<Form.Item name="patient" label="Numero de patient" rules={[{  message: "Veuillez sélectionner l'adresse!" }]}>
+<Form.Item name="patient" label="Numero de patient" >
   <Input disabled type="text" style={{ color: "black", fontSize: "16px", borderColor: "black"  }} />
 </Form.Item>
 </div> 
@@ -104,11 +104,11 @@ const VoirOrdonance = ({ initialValues, onSubmit, onMedicamentNamesChange }) => 
             
         <MyFormItemGroup>
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between",marginTop: '-180px' }}>
-            <Form.Item   name="nom" label="Nom de medecin" rules={[{  message: 'Veuillez sélectionner le nom!' }]}>
+            <Form.Item   name="nom" label="Nom de medecin" >
               <Input disabled type="text" style={{ color: "black", fontSize: "16px", borderColor: "black"  }} />
             </Form.Item>
          
-            <Form.Item name="email" label="Email de medecin" rules={[{  message: "Veuillez sélectionner l'adresse!" }]}>
+            <Form.Item name="email" label="Email de medecin" >
   <Input disabled type="text" style={{ color: "black", fontSize: "16px", borderColor: "black"  }} />
 </Form.Item>
       
@@ -120,12 +120,12 @@ const VoirOrdonance = ({ initialValues, onSubmit, onMedicamentNamesChange }) => 
             
         <MyFormItemGroup>
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between" ,marginTop: '-95px'   }}>
-            <Form.Item   name="tel" label="Tel" rules={[{  message: 'Veuillez sélectionner le nom!' }]}>
-              <Input  disabled type="text" style={{ color: "black", fontSize: "16px" , borderColor: "black" }} />
+            <Form.Item   name="tel" label="Tel" >
+              <Input  disabled type="text" style={{ color: "black", fontSize: "16px", borderColor: "black"  }} />
             </Form.Item>
          
-            <Form.Item name="adresse" label="Adresse" rules={[{  message: "Veuillez sélectionner l'adresse!" }]}>
-  <Input disabled type="text" style={{ color: "black", fontSize: "16px", borderColor: "black"  }} />
+            <Form.Item name="adresse" label="Adresse" >
+  <Input disabled type="text" style={{ color: "black", fontSize: "16px" , borderColor: "black" }} />
 </Form.Item>
       
 </div> 
@@ -137,21 +137,13 @@ const VoirOrdonance = ({ initialValues, onSubmit, onMedicamentNamesChange }) => 
             
             name="description"
             label="Description"
-            rules={[
-              {
-                message: "Veuillez saisir l'email!",
-              },
-              {
-                
-                message: "Veuillez saisir l'email!",
-              },
-            ]}
+          
           >
             <Input.TextArea disabled type="text" style={{ color: "black", fontSize: "16px", borderColor: "black"  }} />
           </Form.Item>
 
 
-            <Button href="/ordonance" danger type="text">
+            <Button href="/examen" danger type="text">
               Annuler
             </Button>
            
@@ -161,4 +153,4 @@ const VoirOrdonance = ({ initialValues, onSubmit, onMedicamentNamesChange }) => 
   );
 };
 
-export default VoirOrdonance;
+export default VoirResultat;

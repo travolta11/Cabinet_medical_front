@@ -1,65 +1,90 @@
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Form, Input, message } from 'antd';
 import axios from "axios";
 import { Navigate } from "react-router-dom";
 import { useState } from "react";
+import { Card, Row, Col } from 'antd';
+
+const { Item } = Form;
 
 export const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [navigate, setNavigate] = useState(false);
+  const [form] = Form.useForm();
 
-  const submit = async (e) => {
-    e.preventDefault();
-
+  const onFinish = async (values) => {
     try {
       const { data } = await axios.post('/authentication_token', {
-        email,
-        password
+        email: values.email,
+        password: values.password
       }, { withCredentials: true });
 
-      // Set the token in the cookie
+   
       document.cookie = `token=${data.token}; path=/`;
-
+      document.cookie = `refresh_token=${data.refresh_token}; path=/`;
+      
       axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
 
       setNavigate(true);
     } catch (error) {
       console.log(error);
+      message.error('Invalid credentials', /* duration */ 3).style({ width: '300px' });
     }
-  }
+  };
 
   if (navigate) {
     return <Navigate to="/" />;
   }
 
   return (
-    <main className="form-signin">
-      <form onSubmit={submit}>
-        <h1 className="h3 mb-3 fw-normal">Please sign in</h1>
+    <Row justify="center" align="middle" style={{ height: '100vh' }}>
+      <Col xs={{ span: 6, offset: 0 }}>
+        <div className="dark-theme-container" style={{ marginTop: '-100px' }}>
+          <Card title="Bonjour , Veuillez faire la conexion" className="form-card">
+            <Form form={form} onFinish={onFinish}>
+              <Item
+                name="email"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Veuillez saisir votre email!',
+                  },
+                ]}
+                style={{ width: '100%' }}
+              >
+                <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Email" />
+              </Item>
 
-        <div className="form-floating">
-          <input
-            type="email"
-            className="form-control"
-            id="floatingInput"
-            placeholder="name@example.com"
-            onChange={e => setEmail(e.target.value)}
-          />
-          <label htmlFor="floatingInput">Email address</label>
+              <Item
+                name="password"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Veuillez saisir votre mot de passe!',
+                  },
+                ]}
+                style={{ width: '100%' }}
+              >
+                <Input.Password
+                  prefix={<LockOutlined className="site-form-item-icon" />}
+                  placeholder="Mot de passe "
+                />
+              </Item>
+
+              <Item>
+                <Form.Item name="remember" valuePropName="checked" noStyle>
+                  <Checkbox>Enregistrer </Checkbox>
+                </Form.Item>
+              </Item>
+
+              <Item>
+                <Button type="primary" htmlType="submit" className="login-form-button">
+                  conexion
+                </Button>
+              </Item>
+            </Form>
+          </Card>
         </div>
-
-        <div className="form-floating">
-          <input
-            type="password"
-            className="form-control"
-            id="floatingPassword"
-            placeholder="Password"
-            onChange={e => setPassword(e.target.value)}
-          />
-          <label htmlFor="floatingPassword">Password</label>
-        </div>
-
-        <button className="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
-      </form>
-    </main>
+      </Col>
+    </Row>
   );
-}
+};

@@ -1,15 +1,15 @@
-import {   AutoComplete,
+import {  
     Button,
-    Cascader,
-    Checkbox,
+   
     Col,
     Form,
     Input,
-    InputNumber,
+   
     Row,
     Select,Typography } from 'antd';
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useEffect } from 'react';
 
 
 
@@ -24,40 +24,56 @@ const MyFormItemGroup = ({ prefix, children }) => {
   const concatPath = React.useMemo(() => [...prefixPath, ...toArr(prefix)], [prefixPath, prefix]);
   return <MyFormItemContext.Provider value={concatPath}>{children}</MyFormItemContext.Provider>;
 };
-const MyFormItem = ({ name, ...props }) => {
-  const prefixPath = React.useContext(MyFormItemContext);
-  const concatName = name !== undefined ? [...prefixPath, ...toArr(name)] : undefined;
-  return <Form.Item name={concatName} {...props} />;
-};
-const ModifierUtilisateur = () => {
-    const prefixSelector = (
-        <Form.Item name="prefix" noStyle>
-          <Select
-            style={{
-              width: 70,
-            }}
-          >
-            <Option value="86">+86</Option>
-            <Option value="87">+87</Option>
-          </Select>
-        </Form.Item>
-      );
-  const onFinish = (value) => {
-    console.log(value);
+
+const ModifierUtilisateur = ({ initialValues, onSubmit }) => {
+
+//modifier util
+
+
+const [form] = Form.useForm();
+
+useEffect(() => {
+  form.setFieldsValue(initialValues);
+}, [form, initialValues]);
+
+
+ 
+const onFinish = (values) => {
+ 
+  const updatedValues = {
+    ...values,
+    specialite: Array.isArray(values.specialite) ? values.specialite : [values.specialite],
   };
-  return (<motion.div 
-    initial={{opacity:0,translateX: -10,translateY:-10}}
-    animate={{opacity:1,translateY:-10}}
-    exit={{opacity:0}}
-    transition={{duration : 0.3, delay: 0.7}}
+
+  console.log('Submitted Values:', updatedValues);
+  onSubmit(updatedValues);
+};
+
+
+
+
+
+
+
+
+
+
     
-    
-    
-    >
-    
-    <Form name="form_item_path" layout="vertical" onFinish={onFinish}>
-      <Typography.Title level={4}>Modifier l'utilisateur</Typography.Title>
-      <Row>
+  return (
+
+    <motion.div 
+initial={{opacity:0,translateX: -10,translateY:-10}}
+animate={{opacity:1,translateY:-10}}
+exit={{opacity:0}}
+transition={{duration : 0.3, delay: 0.7}}
+
+
+
+>
+
+    <Form name="form_item_path" layout="vertical" initialValues={initialValues} onFinish={onFinish}>
+          <Typography.Title level={4}>Modifier l'utilisateur</Typography.Title>
+          <Row>
     <Col
   xs={{
     span: 9,
@@ -67,107 +83,118 @@ const ModifierUtilisateur = () => {
 >
       <MyFormItemGroup prefix={['user']}>
         <MyFormItemGroup prefix={['name']}>
-          <MyFormItem name="lastName" label="Nom"  rules={[
-          {
+        <div style={{display: "flex", alignItems: "flex-end", justifyContent: "space-between"}}>
+          <Form.Item name="nom" label="Nom"  rules={[
+          { 
+            
             required: true,
-            message: 'Veuillez saisir le nom!',
+            message: 'Veuillez selectionner le nom!',
           },
         ]}> 
-            <Input />
-          </MyFormItem>
-          <MyFormItem name="firstName" label="Prenom"  rules={[
-          {
-            required: true,
-            message: 'Veuillez selectionner le prenom!',
-          },
-        ]}>
-            <Input />
-          </MyFormItem>
-          <Form.Item
+            <Input type= 'text' />
+          </Form.Item>
+          
+          </div>
+          <MyFormItemGroup>
+          <div style={{display: "flex", alignItems: "flex-end", justifyContent: "space-between"}}>
+
+          <Form.Item 
         name="email"
         label="E-mail"
         rules={[
           {
-            type: 'email',
+            
             message: "Veuillez saisir l'email!",
           },
           {
             required: true,
-            message: 'Veuillez saisir E-mail!',
+            message: "Veuillez saisir l'email!",
           },
         ]}
       >
-        <Input />
+        <Input type= 'email'/>
       </Form.Item>
-        </MyFormItemGroup>
-
-        <MyFormItem name="age" label="Age"  rules={[
-          {
-            required: true,
-            message: "Veuillez saisir l'age!",
-          },
-        ]}>
-          <Input />
-          
-        </MyFormItem>
-        <MyFormItem
-        name="gender"
-        label="Sexe"
+        
+          <Form.Item 
+        name="password"
+        label="Mot de passe"
         rules={[
           {
+            
+            message: "Veuillez saisir le mot de passe!",
+          },
+          {
             required: true,
-            message: 'Veuillez selectionner le sexe!',
+            message: "Veuillez saisir le mot de passe!",
           },
         ]}
       >
-        <Select placeholder="Veuillez selectionner le sexe!">
-          <Option value="male">Masculin</Option>
-          <Option value="female">Féminin</Option>
-         
-        </Select>
-      </MyFormItem>
-      <MyFormItem
-        name="phone"
+        <Input type= 'password'/>
+      </Form.Item>
+        
+        
+        
+        </div></MyFormItemGroup>
+        </MyFormItemGroup>
+        <Form.Item
+          name="specialite"
+          label="Role"
+          rules={[
+            {
+              type: 'text',
+              required: true,
+              message: 'Veuillez selectionner le sexe!',
+            },
+          ]}
+        >
+          <Select placeholder="Veuillez selectionner le role!" >
+          <Option value="Admin">Admin</Option>
+            <Option value="Medecin">Medecin</Option>
+            <Option value="Reception">Reception</Option>
+          </Select>
+        </Form.Item>
+      
+      <Form.Item
+        name="tel"
         label="Tele"
         rules={[
-          {
+          { 
+
+            
             required: true,
-            message: 'Veuillez saisir votre numero de telephone!',
+            message: 'Veuillez saisir votre numéro de telephone!',
           },
         ]}
       >
-        <Input
-          addonBefore={prefixSelector}
+        <Input type="text"
+          
           style={{
             width: '100%',
           }}
         />
-      </MyFormItem>
-      <MyFormItem name="adress" label="Adresse"  rules={[
-          {
+      </Form.Item>
+     
+
+      <Form.Item name="adresse" label="Adresse"  rules={[
+          { 
             required: true,
             message: "Veuillez saisir l'adresse!",
           },
         ]}> 
-            <Input />
-          </MyFormItem>
-          <MyFormItem name="specialite" label="Spécialité"  rules={[
-          {
-            required: true,
-            message: 'Veuillez saisir la spécialité!',
-          },
-        ]}> 
-            <Input />
-          </MyFormItem>
+            <Input type="text" />
+          </Form.Item>
+
 
 
       </MyFormItemGroup>
-      <Button danger type="text" href='/utilisateur'>Annuler</Button>
+      
+      <Button  href="/utilisateur" danger type="text"  >Annuler</Button>             
       <Button type="primary" htmlType="submit">
         Enregistrer
       </Button>
       </Col></Row>
     </Form></motion.div>
+   
   );
 };
 export default ModifierUtilisateur ;

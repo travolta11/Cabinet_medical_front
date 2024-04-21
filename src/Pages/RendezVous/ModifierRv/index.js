@@ -1,21 +1,42 @@
-import { Button, Form, Input, Radio,Typography } from 'antd';
-import {  useState } from 'react';
+import { Button, Form, Input,Typography } from 'antd';
+import React from 'react';
 
-import { Select } from 'antd';
 import { DatePicker, Space } from 'antd';
 import { Col, Row } from 'antd';
 import { motion } from 'framer-motion';
+import { useEffect } from 'react';
 
 
-const onChange = (value) => {
-  console.log(`selected ${value}`);
-};
-const onSearch = (value) => {
-  console.log('search:', value);
-};
 
-const ModifierRv = () => {
-  const isInputDisabled = true;
+const ModifierRv = ({ initialValues, onSubmit }) => {
+
+
+
+  const MyFormItemContext = React.createContext([]);
+  function toArr(str) {
+    return Array.isArray(str) ? str : [str];
+  }
+  const MyFormItemGroup = ({ prefix, children }) => {
+    const prefixPath = React.useContext(MyFormItemContext);
+    const concatPath = React.useMemo(() => [...prefixPath, ...toArr(prefix)], [prefixPath, prefix]);
+    return <MyFormItemContext.Provider value={concatPath}>{children}</MyFormItemContext.Provider>;
+  };
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const onChange = (value, dateString) => {
     console.log('Selected Time: ', value);
@@ -25,12 +46,29 @@ const ModifierRv = () => {
     console.log('onOk: ', value);
   };
   const [form] = Form.useForm();
-  const [formLayout, setFormLayout] = useState('horizontal');
-  const onFormLayoutChange = ({ layout }) => {
-    setFormLayout(layout);
-  };
  
-  return (<motion.div 
+
+ 
+  
+  
+  useEffect(() => {
+    form.setFieldsValue(initialValues);
+  }, [form, initialValues]);
+  
+  const onFinish = (values) => {
+    onSubmit(values);
+  };
+  
+
+
+
+
+
+
+
+      return (
+
+        <motion.div 
     initial={{opacity:0,translateX: -10,translateY:-10}}
     animate={{opacity:1,translateY:-10}}
     exit={{opacity:0}}
@@ -40,54 +78,90 @@ const ModifierRv = () => {
     
     >
     
-    <Form name="form_item_path" layout="vertical" >
- <Typography.Title level={4}>Modifier le rendez-vous</Typography.Title>
-  <Row>
-    <Col xs={{ span: 9, offset: 7}}>
-    <Form.Item  label='Le patient'>
-  
-  <Input disabled={isInputDisabled} /> </Form.Item>
-
-      <Form.Item label="Selectionner un medecin">
-      <Select
-    showSearch
-    placeholder="Rechercher un medecin"
-    optionFilterProp="children"
-    onChange={onChange}
-    onSearch={onSearch}
-    filterOption={(input, option) =>
-      (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-    }
-    options={[
-      {
-        value: 'jack',
-        label: 'Jack',
-      },
-      {
-        value: 'lucy',
-        label: 'Lucy',
-      },
-      {
-        value: 'tom',
-        label: 'Tom',
-      },
-    ]}
-  />
-      </Form.Item>
-      <Form.Item label='Maladie'>
-  
-          <Input /> </Form.Item>
-      <Form.Item label="La date">
+        <Form name="form_item_path" layout="vertical" initialValues={initialValues} onFinish={onFinish}>
+              <Typography.Title level={4}>Modifier Rendez-Vous</Typography.Title>
+              <Row>
+        <Col
+      xs={{
+        span: 9,
+        offset: 7,
+      }}
+      
+    >
+          <MyFormItemGroup prefix={['user']}>
+            <MyFormItemGroup prefix={['name']}>
+            <div style={{display: "flex", alignItems: "flex-end", justifyContent: "space-between"}}>
+              <Form.Item name="nomPatient" label="Nom de patient"  rules={[
+              { 
+                
+                required: true,
+                message: 'Veuillez saisir le nom!',
+              },
+            ]}> 
+                <Input type= 'text' />
+              </Form.Item>
+              <Form.Item name="medecin" label="medecin"  rules={[
+              { 
+                required: true,
+                message: "Veuillez saisir le medecin!",
+              },
+            ]}> 
+                <Input type="text" />
+              </Form.Item>
+              </div>
+              <MyFormItemGroup>
+              <div style={{display: "flex", alignItems: "flex-end", justifyContent: "space-between"}}>
+    
+              <Form.Item 
+            name="emailPatient"
+            label="Email de patient"
+            rules={[
+              {
+                
+                message: "Veuillez saisir l'email!",
+              },
+              {
+                required: true,
+                message: "Veuillez saisir l'email!",
+              },
+            ]}
+          >
+            <Input type= 'email'/>
+          </Form.Item>
+            
+            
+            <Form.Item name="maladie" label="Maladie"  rules={[
+              { 
+                
+                required: true,
+                message: "Veuillez saisir la maladie!",
+              },
+            ]}>
+              <Input type="text" />
+              
+            </Form.Item></div></MyFormItemGroup>
+            </MyFormItemGroup>
+           
+          
+            <Form.Item  name="dateRv" label="La date">
         <Space direction="vertical" size={24}>
           <DatePicker showTime onChange={onChange} onOk={onOk} />
         </Space>
       </Form.Item>
-      <Button danger type="text" href='/rendezvous'>Annuler</Button>
-
-        <Button type="primary">Enregistrer</Button>
-        </Col>
-  </Row>
-    </Form></motion.div>
-  );
+    
+         
+    
+    
+    
+          </MyFormItemGroup>
+          
+          <Button  href="/rendezvous" danger type="text"  >Annuler</Button>             
+          <Button type="primary" htmlType="submit">
+            Enregistrer
+          </Button>
+          </Col></Row>
+        </Form></motion.div>
+       
+      );
 };
 export default ModifierRv;

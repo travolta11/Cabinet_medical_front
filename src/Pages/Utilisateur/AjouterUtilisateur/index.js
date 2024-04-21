@@ -1,16 +1,16 @@
-import {   AutoComplete,
+import {   
     Button,
-    Cascader,
-    Checkbox,
+    
     Col,
     Form,
     Input,
-    InputNumber,
+    
     Row,
     Select,Typography } from 'antd';
 import React from 'react';
 import { motion } from 'framer-motion';
-
+import  { useState } from 'react';
+import axios from 'axios';
 
 
 
@@ -24,150 +24,150 @@ const MyFormItemGroup = ({ prefix, children }) => {
   const concatPath = React.useMemo(() => [...prefixPath, ...toArr(prefix)], [prefixPath, prefix]);
   return <MyFormItemContext.Provider value={concatPath}>{children}</MyFormItemContext.Provider>;
 };
-const MyFormItem = ({ name, ...props }) => {
-  const prefixPath = React.useContext(MyFormItemContext);
-  const concatName = name !== undefined ? [...prefixPath, ...toArr(name)] : undefined;
-  return <Form.Item name={concatName} {...props} />;
-};
-const AjouterUtilisateur = () => {
-    const prefixSelector = (
-        <Form.Item name="prefix" noStyle>
-          <Select
-            style={{
-              width: 70,
-            }}
-          >
-            <Option value="86">+86</Option>
-            <Option value="87">+87</Option>
-          </Select>
-        </Form.Item>
-      );
+
+const AjouterUtilisateur = ({ onSubmit }) => {
+
+
+//ajouter utilisateur
+
+  const [formData, setFormData] = useState({
+    nom: '',
+    roles: [],
+    password: '',
+    email: '',
+    tel: '',
+    adresse: '',
+    specialite: []
+  });
+
+
+  const handleInputChange = (name, value) => {
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handlePost = () => {
+    const currentDateTime = new Date().toISOString();
+    
+    const postData = {
+      ...formData,
+      createdAt: currentDateTime,
+    };
+  
+    axios
+      .post('/api/users', postData)
+      .then((response) => {
+        console.log(response.data);
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+  
+  
   const onFinish = (value) => {
     console.log(value);
+    onSubmit(value);
+    handlePost();
   };
-  return (<motion.div 
-    initial={{opacity:0,translateX: -10,translateY:-10}}
-    animate={{opacity:1,translateY:-10}}
-    exit={{opacity:0}}
-    transition={{duration : 0.3, delay: 0.7}}
-    
-    
-    
-    >
-    
-    <Form name="form_item_path" layout="vertical" onFinish={onFinish}>
-      <Typography.Title level={4}>Ajouter un utilisateur</Typography.Title>
-      <Row>
-    <Col
-  xs={{
-    span: 9,
-    offset: 7,
-  }}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   
+  return (
+    <motion.div
+      initial={{ opacity: 0, translateX: -10, translateY: -10 }}
+      animate={{ opacity: 1, translateY: -10 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3, delay: 0.7 }}
+    >
+      <Form name="form_item_path" layout="vertical" onFinish={onFinish}>
+        <Typography.Title level={4}>Ajouter un utilisateur</Typography.Title>
+        <Row>
+          <Col xs={{ span: 9, offset: 7 }}>
+            <MyFormItemGroup prefix={['user']}>
+              <MyFormItemGroup prefix={['name']}>
+                <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
+                  <Form.Item name="nom" label="Nom" rules={[{ required: true, message: 'Veuillez saisir le nom!' }]}>
+                    <Input value={formData.nom} onChange={(e) => handleInputChange('nom', e.target.value)} type='text' placeholder='Veuillez saisir nom'/>
+                  </Form.Item>
+                </div>
+
+                <MyFormItemGroup>
+                  <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
+                    <Form.Item
+                      name="email"
+                      label="Email"
+                      rules={[
+                        { required: true, message: "Veuillez saisir l'email!" },
+                      ]}
+                    >
+                      <Input value={formData.email} onChange={(e) => handleInputChange('email', e.target.value)} type='email' placeholder='Veuillez saisir email' />
+                    </Form.Item>
+                    <Form.Item name="password" label="Password" rules={[{ required: true, message: "Veuillez saisir le password!" }]}>
+                      <Input value={formData.password} onChange={(e) => handleInputChange('password', e.target.value)} type="password" placeholder='saisir mot de passe' />
+                    </Form.Item>
+                  </div>
+                </MyFormItemGroup>
+              </MyFormItemGroup>
+              <Form.Item
+  name="specialite"
+  label="Role"
+  rules={[
+    {
+      required: true,
+      message: 'Veuillez sélectionner le role!',
+    },
+  ]}
 >
-      <MyFormItemGroup prefix={['user']}>
-        <MyFormItemGroup prefix={['name']}>
-          <MyFormItem name="lastName" label="Nom"  rules={[
-          {
-            required: true,
-            message: 'Veuillez saisir le nom!',
-          },
-        ]}> 
-            <Input />
-          </MyFormItem>
-          <MyFormItem name="firstName" label="Prenom"  rules={[
-          {
-            required: true,
-            message: 'Veuillez selectionner le prenom!',
-          },
-        ]}>
-            <Input />
-          </MyFormItem>
-          <Form.Item
-        name="email"
-        label="E-mail"
-        rules={[
-          {
-            type: 'email',
-            message: "Veuillez saisir l'email!",
-          },
-          {
-            required: true,
-            message: 'Veuillez saisir E-mail!',
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-        </MyFormItemGroup>
+  <Select
+    value={formData.specialite}
+    onChange={(values) => handleInputChange('specialite', [values])} 
+    placeholder="Veuillez sélectionner le(s) rôle(s)!" 
+  >
+    <Option value="Admin">Admin</Option>
+    <Option value="Medecin">Medecin</Option>
+    <Option value="Reception">Reception</Option>
+  </Select>
+</Form.Item>
 
-        <MyFormItem name="age" label="Age"  rules={[
-          {
-            required: true,
-            message: "Veuillez saisir l'age!",
-          },
-        ]}>
-          <Input />
-          
-        </MyFormItem>
-        <MyFormItem
-        name="gender"
-        label="Sexe"
-        rules={[
-          {
-            required: true,
-            message: 'Veuillez selectionner le sexe!',
-          },
-        ]}
-      >
-        <Select placeholder="Veuillez selectionner le sexe!">
-          <Option value="male">Masculin</Option>
-          <Option value="female">Féminin</Option>
-         
-        </Select>
-      </MyFormItem>
-      <MyFormItem
-        name="phone"
-        label="Tele"
-        rules={[
-          {
-            required: true,
-            message: 'Veuillez saisir votre numero de telephone!',
-          },
-        ]}
-      >
-        <Input
-          addonBefore={prefixSelector}
-          style={{
-            width: '100%',
-          }}
-        />
-      </MyFormItem>
-      <MyFormItem name="adress" label="Adresse"  rules={[
-          {
-            required: true,
-            message: "Veuillez saisir l'adresse!",
-          },
-        ]}> 
-            <Input />
-          </MyFormItem>
-          <MyFormItem name="specialite" label="Spécialité"  rules={[
-          {
-            required: true,
-            message: 'Veuillez saisir la spécialité!',
-          },
-        ]}> 
-            <Input />
-          </MyFormItem>
-
-
-      </MyFormItemGroup>
-      <Button danger type="text" href='/utilisateur'>Annuler</Button>
-      <Button type="primary" htmlType="submit">
-        Enregistrer
-      </Button>
-      </Col></Row>
-    </Form></motion.div>
+              <Form.Item
+                name="tel"
+                label="Tele"
+              
+              >
+                <Input value={formData.tel} onChange={(e) => handleInputChange('tel', e.target.value)} type="text" style={{ width: '100%' }} placeholder='Veuillez saisir le telephone' />
+              </Form.Item>
+              <Form.Item
+                name="adresse"
+                label="Adresse"
+               
+              >
+                <Input value={formData.adresse} onChange={(e) => handleInputChange('adresse', e.target.value)} type="text" placeholder="Veuillez saisir l'adresse" />
+              </Form.Item>
+            </MyFormItemGroup>
+            <Button danger type="text" href="/utilisateur">
+              Annuler
+            </Button>
+            <Button type="primary" htmlType="submit" onClick={handlePost}>
+              Ajouter
+            </Button>
+          </Col>
+        </Row>
+      </Form>
+    </motion.div>
   );
 };
 export default AjouterUtilisateur ;

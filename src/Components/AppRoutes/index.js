@@ -1,92 +1,138 @@
-import { BrowserRouter, Route, Routes ,useLocation} from "react-router-dom";
- import Patient from "../../Pages/Patient";
-import Utilisateur from "../../Pages/Utilisateur";
-import Dashboard from "../../Pages/Dashbaord";
-import RendezVous from "../../Pages/RendezVous";
-import Ordonance from "../../Pages/Ordonance";
-import AjouterOrdonance from "../../Pages/Ordonance/AjouterOrdonance";
-import DossiersMedicaux from "../../Pages/DossiersMedicaux";
-import AfficherDossier from "../../Pages/DossiersMedicaux/AfficherDossier";
-import AjouterRendezVous from "../../Pages/RendezVous/AjouterRendezVous";
-import ModifierRv from "../../Pages/RendezVous/ModifierRv";
-import AjouterPatient from "../../Pages/Patient/AjouterPatient";
-import ModifierPatient from "../../Pages/Patient/ModifierPatient";
-import AjouterUtilisateur from "../../Pages/Utilisateur/AjouterUtilisateur";
-import ModifierUtilisateur from "../../Pages/Utilisateur/ModifierUtilisateur";
-import Pharmacie from "../../Pages/Pharmacie";
-import AjouterCategorie from "../../Pages/Pharmacie/AjouterCategorie";
-import AjouterMedicament from "../../Pages/Pharmacie/AjouterMedicament";
-import ModifierMedicament from "../../Pages/Pharmacie/ModifierMedicament";
-import Laboratoire from "../../Pages/Laboratoire";
-import AjouterResultat from "../../Pages/Laboratoire/AjouterResultat";
-import AjouterTest from "../../Pages/Laboratoire/AjouterTest";
-import VoirResultat from "../../Pages/Laboratoire/VoirResultat";
-import ModifierResultat from "../../Pages/Laboratoire/VoirResultat/ModifierResultat"
-import ModifierTest from "../../Pages/Laboratoire/ModifierTest";
-import VoirPatient from "../../Pages/Patient/VoirPatient";
-import ModifierOrdonance  from '../../Pages/Ordonance/ModifierOrdonance'
-import VoirOrdonance  from '../../Pages/Ordonance/VoirOrdonance'
-import {Login} from '../../Pages/Login'
+import {  Route, Routes } from "react-router-dom";
+
+
+
+import Vital from "../../Pages/Vital";
+import Cookies from 'js-cookie';
+import Unauthorized from "../../Pages/Unauthorized";
 import { AnimatePresence } from 'framer-motion';
-import { useParams } from 'react-router-dom';
+import axios from "axios";
+import React, { lazy } from "react";
+
+import { useEffect,useState } from "react";
+
+// Lazy-loaded components
+const Dashboard = lazy(() => import("../../Pages/Dashbaord"));
+const RendezVous = lazy(() => import("../../Pages/RendezVous"));
+const Ordonance = lazy(() => import("../../Pages/Ordonance"));
+const DossiersMedicaux = lazy(() => import("../../Pages/DossiersMedicaux"));
+const Patient = lazy(() => import("../../Pages/Patient"));
+const Utilisateur = lazy(() => import("../../Pages/Utilisateur"));
+const Pharmacie = lazy(() => import("../../Pages/Pharmacie"));
+const Examen = lazy(() => import("../../Pages/Examen"));
 
 function AppRoutes() {
 
+  const [userRoles, setUserRoles] = useState([]);
+  const [, setUser] = useState(null);
 
-  const location=useLocation();
+  useEffect(() => {
+   
+
+    const token = Cookies.get("token");
+    if (token) {
+      const fetchUserData = async () => { try {
+        const response = await axios.get("/api/user/me", {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const userData = response.data;
+        setUser(userData);
+        setUserRoles(userData.specialite);
+
+       
+        
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchUserData();
+  } else {
+    
+  }
+}, );
+
+// Render the Utilisateur component only when userRoles are loaded
+
+
+ 
+
+
   return (
     <AnimatePresence>
-    <Routes >
-      {/* Dashbaord*/}
-      <Route path="/" element={<Dashboard />}></Route>
-
-      
-      {/* Patient*/}
-      <Route path="/patient" element={<Patient />}></Route> 
-      <Route path="/patient/ajouterpatient" element={<AjouterPatient />}></Route>
-      <Route path="/patient/modifierpatient" element={<ModifierPatient />}></Route>
-
-      {/* Utilisateur*/}
-      <Route path="/utilisateur" element={<Utilisateur />}></Route>
-      <Route path="/utilisateur/ajouterutilisateur" element={<AjouterUtilisateur />}></Route>
-      <Route path="/utilisateur/modifierutilisateur" element={<ModifierUtilisateur />}></Route>
-
-      {/* Rendez-vous*/}
-      <Route path="/rendezvous" element={<RendezVous />}></Route>
-      <Route path="/rendezvous/ajouterrendezvous" element={<AjouterRendezVous />}></Route>
-      <Route path="/rendezvous/modifierrendezvous" element={<ModifierRv />}></Route>
-
-      {/* Parmacie*/}
-      <Route path="/pharmacie" element={<Pharmacie />}></Route>
-      <Route path="/pharmacie/ajoutercategorie" element={<AjouterCategorie />}></Route>
-      <Route path="/pharmacie/ajoutermedicament" element={<AjouterMedicament />}></Route>
-      <Route path="/pharmacie/modifiermedicament" element={<ModifierMedicament />}></Route>
-
-      {/* laboratoire*/}
-      <Route path="/laboratoire" element={<Laboratoire />}></Route>
-      <Route path="/laboratoire/ajouterresultat" element={<AjouterResultat />}></Route>
-      <Route path="/laboratoire/ajoutertest" element={<AjouterTest />}></Route>
-      <Route path="/laboratoire/voirresultat" element={<VoirResultat />}></Route>
-      <Route path="/laboratoire/voirresultat/modifierresultat" element={<ModifierResultat />}></Route>
-      <Route path="/laboratoire/modifiertest" element={<ModifierTest />}></Route>
-
-
-      {/* Ordonance*/}
-      <Route path="/ordonance" element={<Ordonance />}></Route>
-      <Route path="/ordonance/ajouterordonance" element={<AjouterOrdonance />}></Route>
-      <Route path="/ordonance/modifierordonance" element={<ModifierOrdonance />}></Route>
-      <Route path="/ordonance/Voirordonance" element={<VoirOrdonance />}></Route>
-      
-
-      
-      {/* Dossier-Medicaux*/}
-      <Route path="/dossiersmedicaux" element={<DossiersMedicaux />}></Route>
-      <Route path="/dossiersmedicaux/afficherdossier" element={<AfficherDossier />}></Route>
-
      
+      <Routes>
+        {/* Dashboard */}
+        <Route path="/" element={<Dashboard />} />
 
+        {/* Patient */}
+       
+            <Route path="/patient" element={<Patient />} />
+         
+         
+       
 
-    </Routes>
+        {/* Utilisateur */}
+        {(userRoles.includes("Admin")) && (
+          <>
+            <Route path="/utilisateur" element={<Utilisateur />} />
+            
+          </>
+        )}
+
+        {/* Rendez-vous */}
+       
+          
+            <Route path="/rendezvous" element={<RendezVous />} />
+           
+          
+       
+
+        {/* Pharmacie */}
+        {(userRoles.includes("Admin") || userRoles.includes("Medecin")) && (
+          <>
+            <Route path="/pharmacie" element={<Pharmacie />} />
+          
+          </>
+        )}
+
+        {/* Examen */}
+        {(userRoles.includes("Admin") || userRoles.includes("Medecin")) && (
+          <>
+            <Route path="/examen" element={<Examen />} />
+          
+          </>
+        )}
+
+        {/* Ordonance */}
+        {(userRoles.includes("Admin") || userRoles.includes("Medecin")) && (
+          <>
+            <Route path="/ordonance" element={<Ordonance />} />
+        
+          </>
+        )}
+
+        {/* Dossier-Medicaux */}
+        {(userRoles.includes("Admin") || userRoles.includes("Medecin")) && (
+          <>
+            <Route path="/dossiersmedicaux" element={<DossiersMedicaux />} />
+          
+          </>
+        )}
+
+        {/* Vital */}
+        {(userRoles.includes("Admin") || userRoles.includes("Medecin")) && (
+          <>
+            <Route path="/vital" element={<Vital />} />
+          </>
+        )}
+       
+        {/* Fallback route for unauthorized access */}
+        <Route path="*" element={<Unauthorized />} />
+      </Routes>
     </AnimatePresence>
   );
 }
