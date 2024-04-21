@@ -1,5 +1,4 @@
 import {
-
   CalendarOutlined,
   UserAddOutlined,
   FileTextOutlined,
@@ -14,13 +13,12 @@ import {
   Typography,
   Badge,
   Calendar,
-  
   Button,
   Modal,
   Col,
   Row,
 } from 'antd';
-import { Progress} from 'antd';
+import { Progress } from 'antd';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import moment from 'moment';
@@ -142,124 +140,133 @@ function Dashboard() {
       <Space size={20} direction='vertical'>
         <Typography.Title level={4}>Tableau de bord</Typography.Title>
         <Space direction='horizontal'>
-          <Row>
-            <Col xs={{ span: 5, offset: 1 }}>
-              <DashboardCard
-                icon={
-                  <FileTextOutlined
-                    style={{
-                      color: 'green',
-                      backgroundColor: 'rgba(0,255,0,0.25)',
-                      borderRadius: 20,
-                      fontSize: 24,
-                      padding: 8,
-                    }}
-                  />
-                }
-                title={'Examen tests'}
-                value={examentestCount}
-              />
-              <DashboardCard
-                icon={
-                  <UserAddOutlined
-                    style={{
-                      color: 'blue',
-                      backgroundColor: 'rgba(0,0,255,0.25)',
-                      borderRadius: 20,
-                      fontSize: 24,
-                      padding: 8,
-                    }}
-                  />
-                }
-                title={'Patient'}
-                value={patientCount}
-              />
-            </Col>
+          <Row gutter={[16, 16]}>
+            <Row>
+              <Col xs={{ span: 5, offset: 1 }}>
+                <DashboardCard
+                  icon={
+                    <UserAddOutlined
+                      style={{
+                        color: 'blue',
+                        backgroundColor: 'rgba(0,0,255,0.25)',
+                        borderRadius: 20,
+                        fontSize: 24,
+                        padding: 8,
+                      }}
+                    />
+                  }
+                  title={'Patient'}
+                  value={patientCount}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={{ span: 5, offset: 1 }}>
+                <DashboardCard
+                  icon={
+                    <FileTextOutlined
+                      style={{
+                        color: 'green',
+                        backgroundColor: 'rgba(0,255,0,0.25)',
+                        borderRadius: 20,
+                        fontSize: 24,
+                        padding: 8,
+                      }}
+                    />
+                  }
+                  title={'Examen tests'}
+                  value={examentestCount}
+                />
+              </Col>
+            </Row>
           </Row>
-          <Row>
-            <Col xs={{ span: 5, offset: 1 }}>
-              <DashboardCard
-                icon={
-                  <FileTextOutlined
-                    style={{
-                      color: 'green',
-                      backgroundColor: 'rgba(0,255,0,0.25)',
-                      borderRadius: 20,
-                      fontSize: 24,
-                      padding: 8,
-                    }}
-                  />
-                }
-                title={'Examen resultats'}
-                value={examenresultatCount}
-              />
-              <DashboardCard
-                icon={
-                  <DiffOutlined
-                    style={{
-                      color: 'blue',
-                      backgroundColor: 'rgba(0,0,255,0.25)',
-                      borderRadius: 20,
-                      fontSize: 24,
-                      padding: 8,
-                    }}
-                  />
-                }
-                title={'Ordonances'}
-                value={ordonanceCount}
-              />
-            </Col>
+          <Row gutter={[16, 16]}>
+            <Row>
+              <Col xs={{ span: 5, offset: 1 }}>
+                <DashboardCard
+                  icon={
+                    <CalendarOutlined
+                      style={{
+                        color: 'blue',
+                        backgroundColor: 'rgba(0,0,255,0.25)',
+                        borderRadius: 20,
+                        fontSize: 24,
+                        padding: 8,
+                      }}
+                    />
+                  }
+                  title={'Rendez-Vous'}
+                  value={rendezvousCount}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={{ span: 5, offset: 1 }}>
+                <DashboardCard
+                  icon={
+                    <FileTextOutlined
+                      style={{
+                        color: 'green',
+                        backgroundColor: 'rgba(0,255,0,0.25)',
+                        borderRadius: 20,
+                        fontSize: 24,
+                        padding: 8,
+                      }}
+                    />
+                  }
+                  title={'Examen resultats'}
+                  value={examenresultatCount}
+                />
+              </Col>
+            </Row>
           </Row>
-          <Row>
-            <Col xs={{ span: 5, offset: 1 }}>
-              <DashboardCard
-                icon={
-                  <FolderOpenOutlined
-                    style={{
-                      color: 'green',
-                      backgroundColor: 'rgba(0,255,0,0.25)',
-                      borderRadius: 20,
-                      fontSize: 24,
-                      padding: 8,
-                    }}
-                  />
-                }
-                title={'Dossiers Medicaux'}
-                value={patientCount}
-              />
-              <DashboardCard
-                icon={
-                  <CalendarOutlined
-                    style={{
-                      color: 'blue',
-                      backgroundColor: 'rgba(0,0,255,0.25)',
-                      borderRadius: 20,
-                      fontSize: 24,
-                      padding: 8,
-                    }}
-                  />
-                }
-                title={'Rendez-Vous'}
-                value={rendezvousCount}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={{ span: 18, offset: 4 }}>
-              <DashboardChart />
-            </Col>
+          <Row gutter={[16, 16]}>
+            <Row>
+              <Col xs={{ span: 5, offset: 1 }}>
+                <DashboardCard
+                  icon={
+                    <DiffOutlined
+                      style={{
+                        color: 'blue',
+                        backgroundColor: 'rgba(0,0,255,0.25)',
+                        borderRadius: 20,
+                        fontSize: 24,
+                        padding: 8,
+                      }}
+                    />
+                  }
+                  title={'Ordonances'}
+                  value={ordonanceCount}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col xs={{ span: 5, offset: 1 }}>
+                <DashboardCard
+                  icon={
+                    <FolderOpenOutlined
+                      style={{
+                        color: 'green',
+                        backgroundColor: 'rgba(0,255,0,0.25)',
+                        borderRadius: 20,
+                        fontSize: 24,
+                        padding: 8,
+                      }}
+                    />
+                  }
+                  title={'Dossiers Medicaux'}
+                  value={patientCount}
+                />
+              </Col>
+            </Row>
           </Row>
         </Space>
-        
-          <Row>
-            <DerniersRv />
-          
-           
-              <div className='calendar'>
-              <DashboardCalendar /> 
-              </div>
-          </Row>
        
+          <DerniersRv />
+          
+            <DashboardCalendar />
+         
+      
       </Space>
     </motion.div>
   );
@@ -268,8 +275,16 @@ function Dashboard() {
 // le composant de carte
 function DashboardCard({ title, value, icon }) {
   return (
-    <Card style={{ height: '160px', width: '220px' }}>
-      <Space direction='horizontal'>
+    <Card
+      style={{
+        height: '120px',
+        width: '380px',
+        borderRadius: '20px',
+        border: 'none',
+        boxShadow: '2px 6px 14px rgba(0, 0, 0.1, 0.2)', // Adding box shadow
+      }}
+    >
+      <Space direction="horizontal">
         {icon}
         <Statistic title={title} value={value} />
       </Space>
@@ -290,10 +305,9 @@ function DerniersRv() {
       const params = {
         page: currentPage,
         itemsPerPage: 3,
-       
         'order[created_at]': 'DESC'
       };
-  
+
       axios
         .get("/api/rendezvouses?pagination=true", { params })
         .then((response) => {
@@ -306,54 +320,39 @@ function DerniersRv() {
           setLoading(false);
         });
     };
-  
+
     setLoading(true);
     fetchRendezvouss();
   }, [currentPage, pageSize]);
 
   const columns = [
-    
-    { title: 'Nom de patient',dataIndex: 'nomPatient', key: 'nomPatient',width: '30%',},
-
-    { title: 'Email de patient',dataIndex: 'emailPatient',key: 'emailPatient',width: '30%',},
-
-    { title: 'Maladie', dataIndex: 'maladie', key: 'maladie', width: '30%' },
-
-    { title: 'Medecin', dataIndex: 'medecin', key: 'medecin', width: '30%' },
-
-    { title: 'Date de rendez-vous',dataIndex: 'dateRv',key: 'dateRv',width: '30%',render: (dateRv) => moment(dateRv).format('YYYY-MM-DD HH:mm:ss'), },
-  
+    { title: 'Nom de patient',dataIndex: 'nomPatient', key: 'nomPatient'},
+    { title: 'Email de patient',dataIndex: 'emailPatient',key: 'emailPatient'},
+    { title: 'Maladie', dataIndex: 'maladie', key: 'maladie' },
+    { title: 'Medecin', dataIndex: 'medecin', key: 'medecin' },
+    { title: 'Date de rendez-vous',dataIndex: 'dateRv',key: 'dateRv',render: (dateRv) => moment(dateRv).format('YYYY-MM-DD HH:mm:ss'), },
   ];
 
   return (
-    <Card title='Les derniers rendez-vous'>
-    <Row>
-      <Col
-        xs={{
-          span: 5,
-          offset: 1,
-        }}
-      >
-        
-        <>
-         
-          <Table
-            columns={columns}
-            loading={loading}
-            dataSource={dataSource}
-            pagination={false}
-            size='small'
-          ></Table>
-        </>
-      </Col>
-    </Row></Card>
+    <Card style={{width: '100%',borderRadius: '10px',
+    border: '2px solid rgba(0, 0, 0, 0.1)',boxShadow: '2px 6px 14px rgba(0, 0, 0.1, 0.2)' }} title='Les derniers rendez-vous'>
+    
+          <>
+            <Table
+              columns={columns}
+              loading={loading}
+              dataSource={dataSource}
+              pagination={false}
+              size='small'
+            ></Table>
+          </>
+       
+    </Card>
   );
 }
 
-
 //le composant de calendrier
 const DashboardCalendar = () => {
-  const [isvisible, setVisible] = useState(false); // State for controlling the visibility of the pop-up
   const [eventsData, setEventsData] = useState([]);
 
   useEffect(() => {
@@ -384,7 +383,7 @@ const DashboardCalendar = () => {
     const cellClass = isPastDate ? 'disabled-cell' : '';
 
     return (
-      <div className={`events ${cellClass}`}>
+      <div  className={`events ${cellClass}`}>
         {events.map((event, index) => (
           <div key={index}>
             <Badge
@@ -399,208 +398,14 @@ const DashboardCalendar = () => {
     );
   };
 
-  const handleOpenModal = () => {
-    setVisible(true);
-  };
-
-  const handleCloseModal = () => {
-    setVisible(false);
-  };
-
   return (
-    <>
-      <Button
-        size='large'
-        onClick={handleOpenModal}
-        icon={<CalendarOutlined />}
-        style={{marginBottom: '275px',  marginLeft: '0cm' }}
-      >
-        Ouvrir le calendrier
-      </Button>
-      <Modal
-        title='Calendrier'
-        open={isvisible}
-        onCancel={handleCloseModal}
-        footer={null}
-        width={1000}
-      >
-        <Calendar dateCellRender={dateCellRender} />
-       
-      </Modal>
-    
-    </>
+    <Card style={{width: '100%',borderRadius: '10px',
+    border: '2px solid rgba(0, 0, 0, 0.1)',boxShadow: '2px 6px 14px rgba(0, 0, 0.1, 0.2)' }} title='Calendrier'>
+      <>
+      <Calendar dateCellRender={dateCellRender} />
+      </>
+    </Card>
   );
 };
 
-const DashboardChart = () => {
-  const [, setPatientCount] = useState(0);
-  const [, setExamenresultatCount] = useState(0);
-  const [, setExamentestCount] = useState(0);
-  const [, setOrdonanceCount] = useState(0);
-  const [, setRendezvousCount] = useState(0);
-  const [, setTotalCount] = useState(0);
-  const [percent, setPercent] = useState(0);
-  const [percent1, setPercent1] = useState(0);
-  const [percent2, setPercent2] = useState(0);
-  const [percent3, setPercent3] = useState(0);
-  const [percent4, setPercent4] = useState(0);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = () => {
-    const rendezvousPromise = axios.get(
-      '/api/rendezvouses'
-    );
-    const patientPromise = axios.get('/api/patients');
-    const ordonancePromise = axios.get('/api/ordonances');
-    const examentestPromise = axios.get(
-      '/api/examentests'
-    );
-    const examenresultatPromise = axios.get(
-      '/api/examenresultats'
-    );
-
-    Promise.all([
-      rendezvousPromise,
-      patientPromise,
-      ordonancePromise,
-      examentestPromise,
-      examenresultatPromise,
-    ])
-      .then((responses) => {
-        const rendezvousData = responses[0].data['hydra:member'];
-        const patientData = responses[1].data['hydra:member'];
-        const ordonanceData = responses[2].data['hydra:member'];
-        const examentestData = responses[3].data['hydra:member'];
-        const examenresultatData = responses[4].data['hydra:member'];
-
-        setRendezvousCount(rendezvousData.length);
-        setPatientCount(patientData.length);
-        setOrdonanceCount(ordonanceData.length);
-        setExamentestCount(examentestData.length);
-        setExamenresultatCount(examenresultatData.length);
-
-        const total = rendezvousData.length;
-        setTotalCount(total);
-
-        const calculatedPercent =  ( patientData.length / patientData.length)* 100
-        const calculatedPercent1 = (rendezvousData.length / patientData.length ) * 100;
-        const calculatedPercent2 = (ordonanceData.length / total) * 100;
-        const calculatedPercent3 = (examentestData.length / total) * 100;
-        const calculatedPercent4 = (examenresultatData.length / total) * 100;
-        setPercent(calculatedPercent);
-        setPercent1(calculatedPercent1);
-        setPercent2(calculatedPercent2);
-        setPercent3(calculatedPercent3);
-        setPercent4(calculatedPercent4);
-      })
-      .catch((error) => {
-        console.error('Error fetching data from API:', error);
-      });
-  };
-
-  return (
-    <>
-      <Row>
-        <Col xs={{ span: 5, offset: 1 }}>
-          <div
-            style={{ display: 'flex', alignItems: 'center' }}
-            className='progress-group'
-          >
-            <div style={{ marginRight: '20px' }}>
-              <h5>Patients</h5>
-              <Space wrap>
-                <Progress
-                  type='circle'
-                  percent={percent}
-                  strokeColor={{
-                    '0%': '#108ee9',
-                    '100%': '#87d068',
-                  }}
-                />
-              </Space>
-            </div>
-            <div style={{ marginRight: '20px' }}>
-              <h5>Rendez-vous</h5>
-              <Space wrap>
-                <Progress
-                  type='circle'
-                  percent={percent1}
-                  format={() => `${Math.round(percent1)}%`}
-                  strokeColor={{
-                    '0%': '#108ee9',
-                    '100%': '#87d068',
-                  }}
-                />
-              </Space>
-            </div>
-            <div style={{ marginRight: '20px' }}>
-              <h5>Rendez-vous consulté</h5>
-              <Space wrap>
-                <Progress
-                  type='circle'
-                  percent={percent2}
-                  format={() => `${Math.round(percent2)}%`}
-                  strokeColor={{
-                    '0%': '#108ee9',
-                    '100%': '#87d068',
-                  }}
-                />
-              </Space>
-            </div>
-          </div>
-        </Col>
-      </Row>
-      <div
-        style={{ display: 'flex', alignItems: 'center' }}
-        className='progress-group'
-      >
-        <div style={{ marginRight: '20px' }}>
-          <h5>Examen tests</h5>
-          <Space wrap>
-            <Progress
-              type='circle'
-              percent={percent3}
-              format={() => `${Math.round(percent3) !== null ? Math.round(percent3) + '%' : '0%'}`}
-              strokeColor={{
-                '0%': '#108ee9',
-                '100%': '#87d068',
-              }}
-            />
-          </Space>
-        </div>
-        <div style={{ marginRight: '20px' }}>
-          <h5>Examen resultats</h5>
-          <Space wrap>
-            <Progress
-              type='circle'
-              percent={percent4}
-              format={() => `${Math.round(percent4)}%`}
-              strokeColor={{
-                '0%': '#108ee9',
-                '100%': '#87d068',
-              }}
-            />
-          </Space>
-        </div>
-        <div style={{ marginRight: '20px' }}>
-          <h5>Dossiers medicaux</h5>
-          <Space wrap>
-            <Progress
-              type='circle'
-              percent={percent1}
-              format={() => `${Math.round(percent1)}%`}
-              strokeColor={{
-                '0%': '#108ee9',
-                '100%': '#87d068',
-              }}
-            />
-          </Space>
-        </div>
-      </div>
-    </>
-  );
-};
 export default Dashboard;

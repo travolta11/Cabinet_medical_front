@@ -256,6 +256,8 @@ const AppComponents = () => {
             style={{
               padding: 0,
               background: colorBgContainer,
+              borderRadius: '10px',
+    border: '2px solid rgba(0, 0, 0, 0.1)', 
             }}
           >
             <Button
@@ -305,6 +307,8 @@ const AppComponents = () => {
                 overflow: 'auto',
                 flex: 1,
                 animation: 'fadeIn 0.5s ease-in-out',
+                borderRadius: '20px',
+    border: '2px solid rgba(0, 0, 0, 0.1)', 
               }}
             >
               <Suspense fallback={<div>Loading...</div>}>

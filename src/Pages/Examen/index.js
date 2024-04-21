@@ -395,14 +395,14 @@ const [selectedExamenresultatId, setselectedExamenresultatId] = useState(null);
 
   const columns = [
   
-    { title: "Nom de patient", dataIndex: "nomPatient", key: "nomPatient", width:'30%',
+    { title: "Nom de patient", dataIndex: "nomPatient", key: "nomPatient", 
     },
-    { title: "Nom de test", dataIndex: "nomTest", key: "nomTest", width:'30%',
+    { title: "Nom de test", dataIndex: "nomTest", key: "nomTest", 
      },
-    { title: "Maladie", dataIndex: "maladie", key: "maladie" , width:'30%',
+    { title: "Maladie", dataIndex: "maladie", key: "maladie" , 
      },
    
-    { title: "Date de test", dataIndex: "dateTest", key: "dateTest" , width:'30%',
+    { title: "Date de test", dataIndex: "dateTest", key: "dateTest" ,
      
     render: (dateTest) => moment(dateTest).format('YYYY-MM-DD HH:mm:ss')
   },
@@ -430,8 +430,8 @@ const [selectedExamenresultatId, setselectedExamenresultatId] = useState(null);
       }
       ,{
         dataIndex: 'operation',
-        
         width: 100,
+        
         render: (_, record) =>
           dataSource.length >= 1 ? (
             <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.id)}>
@@ -448,11 +448,11 @@ const [selectedExamenresultatId, setselectedExamenresultatId] = useState(null);
 
   const columns1 = [
    
-    { title: "Nom de patient", dataIndex: "nomPatient", key: "nomPatient", width:'30%',
+    { title: "Nom de patient", dataIndex: "nomPatient", key: "nomPatient",
    },
-    { title: "Nom de test", dataIndex: "nomTest", key: "nomTest", width:'30%',
+    { title: "Nom de test", dataIndex: "nomTest", key: "nomTest",
      },
-    { title: "Maladie", dataIndex: "maladie", key: "maladie" , width:'30%',
+    { title: "Maladie", dataIndex: "maladie", key: "maladie" ,
      },
    
   
@@ -532,15 +532,8 @@ const [selectedExamenresultatId, setselectedExamenresultatId] = useState(null);
     >
     
     
-        <Row>
-        <Col
-      xs={{
-        span: 1,
-        offset: -1,
-      }}
-      
-    >
-    {showTable && (<Space size={20} direction="vertical">
+     
+    {showTable && (<Space size={20} direction="vertical" style={{ width: '100%' }}>
           <Typography.Title level={4}>Examen</Typography.Title>
           
          
@@ -570,6 +563,8 @@ const [selectedExamenresultatId, setselectedExamenresultatId] = useState(null);
               />
         
            <Table
+            style={{borderRadius: '10px',
+            border: '2px solid rgba(0, 0, 0, 0.1)' }} 
             loading={loading}
             columns={columns}
           
@@ -579,12 +574,15 @@ const [selectedExamenresultatId, setselectedExamenresultatId] = useState(null);
               current: currentPage,
               pageSize: pageSize,
               total: totalItems,
+              position: ['bottomCenter'],
             }}
             onChange={handleTableChange}
 
           ></Table>  
         
            <Table
+           style={{borderRadius: '10px',
+           border: '2px solid rgba(0, 0, 0, 0.1)' }} 
             loading={loading}
             
             columns={columns1}
@@ -594,11 +592,12 @@ const [selectedExamenresultatId, setselectedExamenresultatId] = useState(null);
               current: currentPage,
               pageSize: pageSize,
               total: totalItems,
+              position: ['bottomCenter'],
               
             }}
             onChange={handleTableChange}
           ></Table>  
-        </Space>)}</Col></Row>
+        </Space>)}
     
         {showModifierForm && (
             <ModifierTest
