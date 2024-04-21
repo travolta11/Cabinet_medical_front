@@ -25,6 +25,23 @@ import moment from 'moment';
 import { motion } from 'framer-motion';
 import "./style.css"
 
+
+
+// Function to count patients created on a specific day
+const countPatientsByDay = (patients, targetDate) => {
+  // Convert targetDate to the same format as createdAt
+  const targetDateString = targetDate.toISOString().split('T')[0];
+
+  // Filter patients created on the target date
+  const patientsCreatedOnDay = patients.filter(patient => {
+    const createdAtDate = patient.createdAt.split('T')[0];
+    return createdAtDate === targetDateString;
+  });
+
+  // Return the count of patients created on the target date
+  return patientsCreatedOnDay.length;
+};
+
 function Dashboard() {
   // les données des patients
   const [patientCount, setPatientCount] = useState(0);
@@ -40,11 +57,16 @@ function Dashboard() {
         const resultatData = response.data['hydra:member'];
         const count = resultatData.length;
         setPatientCount(count);
+
+        const currentDate = new Date();
+        const patientCountToday = countPatientsByDay(resultatData, currentDate);
+        console.log("Number of patients created today:", patientCountToday);
       })
       .catch((error) => {
         console.error('Error fetching data from API:', error);
       });
   };
+  
 
   // les données des ordonances
   const [ordonanceCount, setOrdonanceCount] = useState(0);

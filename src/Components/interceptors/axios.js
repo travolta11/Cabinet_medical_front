@@ -44,7 +44,7 @@ const refreshTokens = async () => {
 };
 
 // Démarrer l'intervalle de rafraîchissement du token
-let refreshInterval = setInterval(refreshTokens, 10000); // 10 secondes
+let refreshInterval = setInterval(refreshTokens, 604800*1000); // 10 secondes
 
 axios.interceptors.response.use(
   resp => resp,
@@ -59,7 +59,7 @@ axios.interceptors.response.use(
       await refreshTokens();
 
       // Reprendre l'intervalle de rafraîchissement du token
-      refreshInterval = setInterval(refreshTokens, 10000); // 10 secondes
+      refreshInterval = setInterval(refreshTokens, 604800*1000); // 10 secondes
 
       // Réessayer la requête échouée avec le nouveau token
       error.config.headers['Authorization'] = `Bearer ${document.cookie
