@@ -9,6 +9,8 @@
 .App{
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap; /* Add this line to enable wrapping */
+
   
    min-height: 100vh;
  

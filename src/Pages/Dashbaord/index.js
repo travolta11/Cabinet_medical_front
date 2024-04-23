@@ -23,8 +23,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import moment from 'moment';
 import { motion } from 'framer-motion';
-import "./style.css"
-
+import './style.css';
 
 
 // Function to count patients created on a specific day
@@ -61,18 +60,20 @@ function Dashboard({ data }) {
 
   return (
     <motion.div
+    
       initial={{ opacity: 0, translateX: -10, translateY: -10 }}
       animate={{ opacity: 1, translateY: -10 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3, delay: 0.7 }}
     >
-      <Space size={20} direction='vertical'>
+      <Space size={[20, 20]}  direction='vertical'>
         <Typography.Title level={4}>Tableau de bord</Typography.Title>
         <Space direction='horizontal'>
-          <Row gutter={[16, 16]}>
-            <Row>
-              <Col xs={{ span: 5, offset: 1 }}>
+          <Row   gutter={[16, 16]}>
+            <Row  >
+              <Col offset={2} xs={24} sm={12} md={8} lg={6} xl={6}>
                 <DashboardCard
+              
                   icon={
                     <UserAddOutlined
                       style={{
@@ -90,8 +91,9 @@ function Dashboard({ data }) {
               </Col>
             </Row>
             <Row>
-              <Col xs={{ span: 5, offset: 1 }}>
+              <Col  offset={2} xs={24} sm={12} md={8} lg={6} xl={6}>
                 <DashboardCard
+                
                   icon={
                     <FileTextOutlined
                       style={{
@@ -111,8 +113,9 @@ function Dashboard({ data }) {
           </Row>
           <Row gutter={[16, 16]}>
             <Row>
-              <Col xs={{ span: 5, offset: 1 }}>
+              <Col offset={2} xs={24} sm={12} md={8} lg={6} xl={6}>
                 <DashboardCard
+
                   icon={
                     <CalendarOutlined
                       style={{
@@ -130,7 +133,7 @@ function Dashboard({ data }) {
               </Col>
             </Row>
             <Row>
-              <Col xs={{ span: 5, offset: 1 }}>
+              <Col offset={2} xs={24} sm={12} md={8} lg={6} xl={6}>
                 <DashboardCard
                   icon={
                     <FileTextOutlined
@@ -151,7 +154,7 @@ function Dashboard({ data }) {
           </Row>
           <Row gutter={[16, 16]}>
             <Row>
-              <Col xs={{ span: 5, offset: 1 }}>
+              <Col offset={2} xs={24} sm={12} md={8} lg={6} xl={6}>
                 <DashboardCard
                   icon={
                     <DiffOutlined
@@ -170,7 +173,7 @@ function Dashboard({ data }) {
               </Col>
             </Row>
             <Row>
-              <Col xs={{ span: 5, offset: 1 }}>
+              <Col offset={2} xs={24} sm={12} md={8} lg={6} xl={6}>
                 <DashboardCard
                   icon={
                     <FolderOpenOutlined
@@ -205,14 +208,16 @@ function Dashboard({ data }) {
 function DashboardCard({ title, value, icon }) {
   return (
     <Card
-      style={{
-        height: '120px',
-        width: '380px',
-        borderRadius: '20px',
-        border: 'none',
-        boxShadow: '2px 6px 14px rgba(0, 0, 0.1, 0.2)', // Adding box shadow
-      }}
-    >
+    style={{
+      height: '120px',
+      width: '300px',
+      borderRadius: '20px',
+      border: 'none',
+      boxShadow: '2px 6px 14px rgba(0, 0, 0.1, 0.2)',
+    
+    }}
+  >
+
       <Space direction="horizontal">
         {icon}
         <Statistic title={title} value={value} />
