@@ -42,114 +42,21 @@ const countPatientsByDay = (patients, targetDate) => {
   return patientsCreatedOnDay.length;
 };
 
-function Dashboard() {
-  // les données des patients
-  const [patientCount, setPatientCount] = useState(0);
+function Dashboard({ data }) {
+  if (!data) {
+    // Render a loading state or return null if dashboard data is not available yet
+    return null;
+  }
 
-  useEffect(() => {
-    fetchPatients();
-  }, []);
 
-  const fetchPatients = () => {
-    axios
-      .get('/api/patients')
-      .then((response) => {
-        const resultatData = response.data['hydra:member'];
-        const count = resultatData.length;
-        setPatientCount(count);
-
-        const currentDate = new Date();
-        const patientCountToday = countPatientsByDay(resultatData, currentDate);
-        console.log("Number of patients created today:", patientCountToday);
-      })
-      .catch((error) => {
-        console.error('Error fetching data from API:', error);
-      });
-  };
+  const {
+    patientCount,
+    ordonanceCount,
+    rendezvousCount,
+    examentestCount,
+    examenresultatCount
+  } = data;
   
-
-  // les données des ordonances
-  const [ordonanceCount, setOrdonanceCount] = useState(0);
-
-  useEffect(() => {
-    fetchOrdonance();
-  }, []);
-
-  const fetchOrdonance = () => {
-    axios
-      .get('/api/ordonances')
-      .then((response) => {
-        const ordonanceData = response.data['hydra:member'];
-        const count = ordonanceData.length;
-        setOrdonanceCount(count);
-      })
-      .catch((error) => {
-        console.error('Error fetching data from API:', error);
-      });
-  };
-
-  // les données des rendez-vous
-  const [rendezvousCount, setRendezvousCount] = useState(0);
-
-  useEffect(() => {
-    fetchRendezvous();
-  }, []);
-
-  const fetchRendezvous = () => {
-    axios
-      .get('/api/rendezvouses')
-      .then((response) => {
-        const rendezvousData = response.data['hydra:member'];
-        const count = rendezvousData.length;
-        setRendezvousCount(count);
-      })
-      .catch((error) => {
-        console.error('Error fetching data from API:', error);
-      });
-  };
-
-  // les données des examentests
-
-  const [examentestCount, setExamentestCount] = useState(0);
-
-  useEffect(() => {
-    fetchExamentest();
-  }, []);
-
-  const fetchExamentest = () => {
-    axios
-      .get('/api/examentests')
-      .then((response) => {
-        const examentestData = response.data['hydra:member'];
-        const count = examentestData.length;
-        setExamentestCount(count);
-      })
-      .catch((error) => {
-        console.error('Error fetching data from API:', error);
-      });
-  };
-
-  // les données des examenresultasts
-
-  const [examenresultatCount, setExamenresultatCount] = useState(0);
-
-  useEffect(() => {
-    fetchExamenresultat();
-  }, []);
-
-  const fetchExamenresultat = () => {
-    axios
-      .get('/api/examenresultats')
-      .then((response) => {
-        const examenresultatData = response.data['hydra:member'];
-        const count = examenresultatData.length;
-        setExamenresultatCount(count);
-      })
-      .catch((error) => {
-        console.error('Error fetching data from API:', error);
-      });
-  };
-
   //affichage
 
   return (

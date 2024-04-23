@@ -26,6 +26,7 @@ import { Navigate } from "react-router-dom";
 import { Spin } from 'antd';
 import Cookies from 'js-cookie';
 import { lazy, Suspense } from "react";
+import  { fetchUserData } from "../interceptors/axios"; // Import your custom Axios instance
 
 const { Header, Sider, Content, Footer } = Layout;
 
@@ -69,34 +70,31 @@ const AppComponents = () => {
   const [navigate1, setNavigate] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [userRoles, setUserRoles] = useState([]);
+  
 
   useEffect(() => {
-    const token = Cookies.get('token');
-    if (token) {
-      const fetchUserData = async () => {
+    const userDataFromLocalStorage = localStorage.getItem('user');
+    if (userDataFromLocalStorage) {
+      const userData = JSON.parse(userDataFromLocalStorage);
+      setUser(userData);
+      setUserRoles(userData.specialite);
+      setIsLoading(false);
+    } else {
+      const fetchData = async () => {
         try {
-          const response = await axios.get("/api/user/me", {
-            withCredentials: true,
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          const userData = response.data;
+          const userData = await fetchUserData(); // Call fetchUserData from axios.js
           setUser(userData);
-          setUserRoles(userData.specialite)
+          setUserRoles(userData.specialite);
           setIsLoading(false);
         } catch (error) {
-          console.log(error);
-          setNavigate(true);
+          console.error('Error fetching user data:', error);
+          navigate('/login'); // Redirect to login page if there's an error fetching user data
         }
       };
-
-      fetchUserData();
-    } else {
-      setNavigate(true);
+  
+      fetchData();
     }
-  }, []);
-
+  }, [navigate]);
 
 
 
