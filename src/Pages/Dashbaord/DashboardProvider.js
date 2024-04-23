@@ -9,8 +9,14 @@ function DashboardDataProvider({ children }) {
     rendezvousCount: 0,
     examentestCount: 0,
     examenresultatCount: 0,
+    patientCountToday : 0
+
   });
 
+ 
+
+
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -22,6 +28,9 @@ function DashboardDataProvider({ children }) {
           axios.get('/api/examenresultats')
         ]);
 
+        const patients = patientsResponse.data['hydra:member'];
+        const today = new Date().toISOString().split('T')[0];
+        const patientCountToday = patients.filter(patient => patient.createdAt.split('T')[0] === new Date().toISOString().split('T')[0]).length;
         const patientCount = patientsResponse.data['hydra:member'].length;
         const ordonanceCount = ordonancesResponse.data['hydra:member'].length;
         const rendezvousCount = rendezvousResponse.data['hydra:member'].length;
@@ -33,8 +42,11 @@ function DashboardDataProvider({ children }) {
           ordonanceCount,
           rendezvousCount,
           examentestCount,
-          examenresultatCount
+          examenresultatCount,
+          patientCountToday,
+         
         });
+       
       } catch (error) {
         console.error('Error fetching data from API:', error);
       }

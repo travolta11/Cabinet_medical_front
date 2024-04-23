@@ -131,16 +131,27 @@ const [selectedUtilisateurId, setSelectedUtilisateurId] = useState(null);
     console.log(selectedUtilisateurId);
     axios.put(`/api/users/${selectedUtilisateurId}`, values)
       .then(() => {
-        
-        setSelectedUtilisateurId(null);
-        
-        setShowModifierForm(false);
-        window.location.reload();
+        axios.get("/api/user/me")
+          .then((response) => {
+            const userData = response.data;
+            // Save user data to local storage
+            localStorage.setItem('user', JSON.stringify(userData));
+            localStorage.setItem('userData', JSON.stringify(userData));
+  
+            setSelectedUtilisateurId(null);
+  
+            setShowModifierForm(false);
+            window.location.reload();
+          })
+          .catch((error) => {
+            console.error('Error getting user data:', error);
+          });
       })
       .catch((error) => {
         console.error('Error updating utilisateur:', error);
       });
   };
+  
 
 
 

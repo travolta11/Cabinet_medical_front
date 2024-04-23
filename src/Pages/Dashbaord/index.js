@@ -26,22 +26,22 @@ import { motion } from 'framer-motion';
 import './style.css';
 
 
-// Function to count patients created on a specific day
-const countPatientsByDay = (patients, targetDate) => {
-  // Convert targetDate to the same format as createdAt
-  const targetDateString = targetDate.toISOString().split('T')[0];
 
-  // Filter patients created on the target date
-  const patientsCreatedOnDay = patients.filter(patient => {
-    const createdAtDate = patient.createdAt.split('T')[0];
-    return createdAtDate === targetDateString;
-  });
 
-  // Return the count of patients created on the target date
-  return patientsCreatedOnDay.length;
-};
 
-function Dashboard({ data }) {
+
+
+
+function Dashboard({ data  }) {
+  const [patientCount, setPatientCount] = useState(data ? data.patientCount : 0);
+
+  const [patientCountToday, setPatientCountToday] = useState(data ? data.patientCountToday : 0);
+  useEffect(() => {
+      if (data) {
+        setPatientCount(data.patientCount);
+        setPatientCountToday(data.patientCountToday);
+      }
+    }, [data]);
   if (!data) {
     // Render a loading state or return null if dashboard data is not available yet
     return null;
@@ -49,12 +49,32 @@ function Dashboard({ data }) {
 
 
   const {
-    patientCount,
+    
     ordonanceCount,
     rendezvousCount,
     examentestCount,
-    examenresultatCount
+    examenresultatCount,
+    
   } = data;
+  
+
+  const handleCountTodayClick = () => {
+
+    setPatientCount(patientCountToday);
+
+    
+
+  };
+  
+  const handleReset = () => {
+
+    setPatientCount(data.patientCount);
+
+    
+
+  };
+  
+ 
   
   //affichage
 
@@ -68,6 +88,8 @@ function Dashboard({ data }) {
     >
       <Space size={[20, 20]}  direction='vertical'>
         <Typography.Title level={4}>Tableau de bord</Typography.Title>
+        <Button onClick={handleCountTodayClick}>Aujourd'hui</Button>
+        <Button type='default' onClick={handleReset}>Reset</Button>
         <Space direction='horizontal'>
           <Row   gutter={[16, 16]}>
             <Row  >

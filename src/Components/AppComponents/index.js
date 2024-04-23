@@ -12,9 +12,10 @@ import {
  
   UserAddOutlined,
   MenuUnfoldOutlined,
-  IdcardOutlined
+  IdcardOutlined,
+  LogoutOutlined
 } from '@ant-design/icons';
-import {  Space } from 'antd';
+import {  Space ,Popconfirm} from 'antd';
 import { Button, Layout, Menu, theme,  Dropdown, Typography } from 'antd';
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
@@ -73,8 +74,9 @@ const AppComponents = () => {
   
 
   useEffect(() => {
+    const token = Cookies.get('token');
     const userDataFromLocalStorage = localStorage.getItem('user');
-    if (userDataFromLocalStorage) {
+    if (token && userDataFromLocalStorage) {
       const userData = JSON.parse(userDataFromLocalStorage);
       setUser(userData);
       setUserRoles(userData.specialite);
@@ -98,6 +100,19 @@ const AppComponents = () => {
 
 
 
+  //logout button
+  const [confirmLogout, setConfirmLogout] = useState(false);
+  const [isHovered, setIsHovered] = useState(false); // State to track hover state
+
+  const hoverStyles = {
+    fontSize: '18px',
+    color: '#ce5254',
+  };
+
+
+
+
+
 
 
 // logout 
@@ -105,6 +120,8 @@ const AppComponents = () => {
     try {
       Cookies.remove('token');
       Cookies.remove('refresh_token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('userData');
       await axios.post("logout", {}, { withCredentials: true });
       
       navigate('/login');
@@ -248,6 +265,45 @@ const AppComponents = () => {
             selectedKeys={[selectedKeys]}
             items={filteredMenuItems}
           />
+        <div style={{ padding: '16px',  display: 'flex', alignItems: 'center',textAlign : "center" }}>
+         <LogoutOutlined  style={{
+              color: 'white',
+              fontSize: '16px',
+              transition: 'font-size 0.3s, color 0.3s',
+              margin : '8px',
+              marginRight : '-4px',
+              textAlign : "center",
+              ...(isHovered && hoverStyles), // Apply hover styles when button is hovered
+            }} />
+
+        <Popconfirm
+        
+          title="Are you sure you want to logout?"
+          onConfirm={logout}
+          okText="Yes"
+          cancelText="No"
+          visible={confirmLogout}
+          onCancel={() => setConfirmLogout(false)}
+        >
+          <Button
+            type="text"
+            onClick={() => setConfirmLogout(true)}
+            style={{
+              color: 'white',
+              fontSize: '16px',
+              transition: 'font-size 0.3s, color 0.3s',
+            
+              ...(isHovered && hoverStyles), // Apply hover styles when button is hovered
+            }}
+            onMouseEnter={() => setIsHovered(true)} // Set isHovered to true on mouse enter
+            onMouseLeave={() => setIsHovered(false)} // Set isHovered to false on mouse leave
+          >
+                        <span style={{ visibility: collapsed ? 'hidden' : 'visible' }}>Deconnexion</span>
+
+          </Button>
+        </Popconfirm>
+      </div>
+          
         </Sider>
         <Layout>
           <Header
@@ -320,7 +376,7 @@ const AppComponents = () => {
               padding: 10,
             }}
           >
-            <Typography.Title level={5}>Norsys Stage Cabinet Medical ©2023 Created by Alfitouri Achraf & Liqali Issam</Typography.Title>
+            <Typography.Title level={5}>Cabinet Medical ©2023 Created by Alfitouri Achraf & Liqali Issam</Typography.Title>
           </Footer>
         </Layout>
       </Layout>
