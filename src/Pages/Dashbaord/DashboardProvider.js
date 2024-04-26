@@ -28,9 +28,9 @@ function DashboardDataProvider({ children }) {
           axios.get('/api/examenresultats')
         ]);
 
-        const patients = patientsResponse.data['hydra:member'];
-        const today = new Date().toISOString().split('T')[0];
-        const patientCountToday = patients.filter(patient => patient.createdAt.split('T')[0] === new Date().toISOString().split('T')[0]).length;
+         const patients = patientsResponse.data['hydra:member'];
+    const today = new Date().toISOString().split('T')[0];
+    const patientCountToday = patients.filter(patient => patient.createdAt.split('T')[0] === today).length; // Corrected filter condition
         const patientCount = patientsResponse.data['hydra:member'].length;
         const ordonanceCount = ordonancesResponse.data['hydra:member'].length;
         const rendezvousCount = rendezvousResponse.data['hydra:member'].length;

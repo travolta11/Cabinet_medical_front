@@ -256,14 +256,16 @@ transition={{duration : 0.3, delay: 0.7}}
       <Typography.Title level={4}>Utilisateur</Typography.Title>
       
      
-    <Button
+    <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full font-medium antialiased"                
+
       onClick={() => handleAddClick()}
       type="primary"
       variant="contained"
       disableElevation
     >
       <b>Ajouter un utilisateur</b>
-    </Button>
+    </button>
 
     {/* la table des utilisateurs */}
     

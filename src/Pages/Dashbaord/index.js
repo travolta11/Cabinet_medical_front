@@ -17,6 +17,7 @@ import {
   Modal,
   Col,
   Row,
+  DatePicker,
 } from 'antd';
 import { Progress } from 'antd';
 import { useEffect, useState } from 'react';
@@ -34,7 +35,8 @@ import './style.css';
 
 function Dashboard({ data  }) {
   const [patientCount, setPatientCount] = useState(data ? data.patientCount : 0);
-
+  const [patients, setPatients] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(null); // Selected date
   const [patientCountToday, setPatientCountToday] = useState(data ? data.patientCountToday : 0);
   useEffect(() => {
       if (data) {
@@ -42,12 +44,56 @@ function Dashboard({ data  }) {
         setPatientCountToday(data.patientCountToday);
       }
     }, [data]);
+
+   
+      
   if (!data) {
     // Render a loading state or return null if dashboard data is not available yet
     return null;
   }
 
+  
 
+  const filterPatientsByDate = async (date) => {
+    if (!date) return { filteredPatients: [], filteredDate: null };
+  
+    const formattedDate = moment(date).format('YYYY-MM-DD'); // Format selected date
+    const url = `/api/patients?created_at=${formattedDate}`;
+  
+    try {
+      const response = await axios.get(url);
+      const filteredPatients = response.data; // Assuming the API returns the filtered patients directly
+      return { filteredPatients, filteredDate: formattedDate };
+    } catch (error) {
+      console.error('Error filtering patients by date:', error);
+      return { filteredPatients: [], filteredDate: null };
+    }
+  };
+  
+
+
+    
+    
+ // Handle date change
+// Handle date change
+const handleDateChange = async (date, dateString) => {
+  setSelectedDate(dateString); // Update selected date
+  // Filter patients for the selected date
+  const { filteredPatients, filteredDate } = await filterPatientsByDate(dateString);
+  // Update state with filtered patients
+  setPatientCount(filteredPatients['hydra:member'].length);
+
+};
+console.log(patients)
+
+// Render the filtered patients
+
+
+
+
+    // Get filtered patients based on the selected date
+    const filteredPatients = filterPatientsByDate(selectedDate);
+  
   const {
     
     ordonanceCount,
@@ -73,7 +119,10 @@ function Dashboard({ data  }) {
     
 
   };
-  
+  const buttonContainerStyle = {
+    display: 'flex',
+    gap: '10px',
+  };
  
   
   //affichage
@@ -88,8 +137,16 @@ function Dashboard({ data  }) {
     >
       <Space size={[20, 20]}  direction='vertical'>
         <Typography.Title level={4}>Tableau de bord</Typography.Title>
-        <Button onClick={handleCountTodayClick}>Aujourd'hui</Button>
-        <Button type='default' onClick={handleReset}>Reset</Button>
+     
+        <div style={buttonContainerStyle}>
+        <DatePicker onChange={handleDateChange} />
+
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={handleCountTodayClick}>Année</button>
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={handleCountTodayClick}>Mois</button>
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={handleCountTodayClick}>jour</button>
+        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full" type='default' onClick={handleReset}>Reset</button>
+        </div>
+
         <Space direction='horizontal'>
           <Row   gutter={[16, 16]}>
             <Row  >

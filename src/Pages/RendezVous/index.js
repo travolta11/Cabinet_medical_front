@@ -185,14 +185,15 @@ function RendezVous() {
           {showTable && (
             <Space size={20} direction="vertical" style={{ width: '100%' }} >
               <Typography.Title level={4}>Rendez-vous</Typography.Title>
-              <Button
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full font-medium antialiased"                
                 onClick={() => handleAddClick()}
                 type="primary"
                 variant="contained"
                 disableElevation
               >
                 <b>Ajouter un rendez-vous</b>
-              </Button>
+              </button>
               {/* Tableu d'affichage des données */}
               <Input.Search
                 style={{ width: '200px' }}

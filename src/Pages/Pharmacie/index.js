@@ -142,6 +142,14 @@ function Pharmacie() {
    
   };
 
+
+
+  const buttonContainerStyle = {
+    display: 'flex',
+    gap: '10px',
+  };
+ 
+
   const columns = [
     { title: "Nom", dataIndex: "nom", key: "nom"},
     { title: "Code bare", dataIndex: "code_bare", key: "code_bare", },
@@ -185,26 +193,29 @@ function Pharmacie() {
           {showTable && (
             <Space size={20} direction="vertical" style={{ width: '100%' }}>
               <Typography.Title level={4}>Pharmacie</Typography.Title>
-            
-              <Button
+              <div style={buttonContainerStyle}>
+
+              <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full font-medium antialiased"                
+
                 onClick={() => handleAddClick()}
                 type="primary"
                 variant="contained"
                 disableElevation
               >
                 <b>Ajouter un medicament</b>
-              </Button>
+              </button>
             
-        <Col style={{marginTop: '-53px'}} xs={{ span: 1, offset: 9 }}>
-              <Button
-                onClick={() => handleAddClick2()}
+        
+              <button
+className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full font-medium antialiased"                onClick={() => handleAddClick2()}
                 type="primary"
                 variant="contained"
                 disableElevation
                 
               >
                 <b>Ajouter une categorie</b>
-              </Button> </Col>
+              </button> </div>
               <Input.Search
                 style={{ width: '200px' }}
                 placeholder="Rechercher par nom"

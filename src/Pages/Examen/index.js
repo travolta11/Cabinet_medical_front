@@ -511,7 +511,11 @@ const [selectedExamenresultatId, setselectedExamenresultatId] = useState(null);
   ];
   
 
-
+  const buttonContainerStyle = {
+    display: 'flex',
+    gap: '10px',
+  };
+ 
 
 
 
@@ -536,25 +540,27 @@ const [selectedExamenresultatId, setselectedExamenresultatId] = useState(null);
     {showTable && (<Space size={20} direction="vertical" style={{ width: '100%' }}>
           <Typography.Title level={4}>Examen</Typography.Title>
           
-         
-        <Button
+          <div style={buttonContainerStyle}>
+
+        <button
+         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full font-medium antialiased"                
           onClick={() => handleAddClick()}
           type="primary"
           variant="contained"
           disableElevation
         >
           <b>Ajouter un test</b>
-        </Button>
-        <Col style={{marginTop: '-53px'}} xs={{ span: 1, offset: 9 }}>
-        <Button
+        </button>
+        <button 
+         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full font-medium antialiased"                
           onClick={() => handleAddClick1()}
           type="primary"
           variant="contained"
           disableElevation
         >
           <b>Ajouter une resultat</b>
-        </Button> </Col>
-     
+        </button> 
+     </div>
         <Input.Search
                 style={{ width: '200px' }}
                 placeholder="Search by name"

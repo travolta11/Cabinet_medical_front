@@ -179,14 +179,15 @@ function Patient() {
           {showTable && (
             <Space size={20} direction="vertical" style={{ width: '100%' }}>
               <Typography.Title level={4}>Patient</Typography.Title>
-              <Button
+              <button
+               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full font-medium antialiased"                
                 onClick={() => handleAddClick()}
                 type="primary"
                 variant="contained"
                 disableElevation
               >
                 <b>Ajouter un patient</b>
-              </Button>
+              </button>
               <Input.Search
                 style={{ width: '200px' }}
                 placeholder="Recherche par cin"
