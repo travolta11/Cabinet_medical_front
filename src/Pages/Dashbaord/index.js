@@ -20,7 +20,7 @@ import {
   DatePicker,
 } from 'antd';
 import { Progress } from 'antd';
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useRef } from 'react';
 import axios from 'axios';
 import moment from 'moment';
 import { motion } from 'framer-motion';
@@ -34,13 +34,24 @@ import './style.css';
 
 
 function Dashboard({ data  }) {
+  const datePickerRef = useRef(null); // Create a ref for the DatePicker component
+
   const [patientCount, setPatientCount] = useState(data ? data.patientCount : 0);
+  const [ordonanceCount, setOrdonanceCount] = useState(data ? data.ordonanceCount : 0);
+  const [rendezvousCount, setRendezvousCount] = useState(data ? data.rendezvousCount : 0);
+  const [examentestCount, setExamentestCount] = useState(data ? data.examentestCount : 0);
+  const [examenresultatCount, setExamenresultatCount] = useState(data ? data.examenresultatCount : 0);
   const [patients, setPatients] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null); // Selected date
+  const [selectedDate2, setSelectedDate2] = useState([]); // Selected date
   const [patientCountToday, setPatientCountToday] = useState(data ? data.patientCountToday : 0);
   useEffect(() => {
       if (data) {
         setPatientCount(data.patientCount);
+        setOrdonanceCount(data.ordonanceCount);
+        setRendezvousCount(data.rendezvousCount);
+        setExamenresultatCount(data.examenresultatCount);
+        setExamentestCount(data.examentestCount);
         setPatientCountToday(data.patientCountToday);
       }
     }, [data]);
@@ -70,7 +81,58 @@ function Dashboard({ data  }) {
     }
   };
   
-
+  const filterPatientsByDate2 = async (strictlyAfterDate, strictlyBeforeDate) => {
+    if (!strictlyAfterDate || !strictlyBeforeDate) return { filteredPatients2: [], filteredStartDate: null, filteredEndDate: null };
+    
+    const formattedStrictlyAfterDate = moment(strictlyAfterDate).format('YYYY-MM-DD');
+    const formattedStrictlyBeforeDate = moment(strictlyBeforeDate).format('YYYY-MM-DD');
+    const url2 = `/api/patients?created_at[after]=${formattedStrictlyAfterDate}&created_at[before]=${formattedStrictlyBeforeDate}`;
+    
+    try {
+      const response = await axios.get(url2);
+      const filteredPatients2 = response.data;
+      return { filteredPatients2, filteredStartDate: formattedStrictlyAfterDate, filteredEndDate: formattedStrictlyBeforeDate };
+    } catch (error) {
+      console.error('Error filtering patients by date:', error);
+      return { filteredPatients2: [], filteredStartDate: null, filteredEndDate: null };
+    }
+  };
+  
+  //ordonanace
+  const filterOrdonancesByDate = async (date) => {
+    if (!date) return { filteredOrdonances: [], filteredDate: null };
+  
+    const formattedDate = moment(date).format('YYYY-MM-DD'); // Format selected date
+    const url = `/api/ordonances?created_at=${formattedDate}`;
+  
+    try {
+      const response = await axios.get(url);
+      const filteredOrdonances = response.data; // Assuming the API returns the filtered patients directly
+      return { filteredOrdonances, filteredDate: formattedDate };
+    } catch (error) {
+      console.error('Error filtering patients by date:', error);
+      return { filteredOrdonances: [], filteredDate: null };
+    }
+  };
+  
+  const filterOrdonancesByDate2 = async (strictlyAfterDate, strictlyBeforeDate) => {
+    if (!strictlyAfterDate || !strictlyBeforeDate) return { filteredOrdonances2: [], filteredStartDate: null, filteredEndDate: null };
+    
+    const formattedStrictlyAfterDate = moment(strictlyAfterDate).format('YYYY-MM-DD');
+    const formattedStrictlyBeforeDate = moment(strictlyBeforeDate).format('YYYY-MM-DD');
+    const url2 = `/api/ordonances?created_at[after]=${formattedStrictlyAfterDate}&created_at[before]=${formattedStrictlyBeforeDate}`;
+    
+    try {
+      const response = await axios.get(url2);
+      const filteredOrdonances2 = response.data;
+      return { filteredOrdonances2, filteredStartDate: formattedStrictlyAfterDate, filteredEndDate: formattedStrictlyBeforeDate };
+    } catch (error) {
+      console.error('Error filtering patients by date:', error);
+      return { filteredOrdonances2: [], filteredStartDate: null, filteredEndDate: null };
+    }
+  };
+  
+  
 
     
     
@@ -80,11 +142,27 @@ const handleDateChange = async (date, dateString) => {
   setSelectedDate(dateString); // Update selected date
   // Filter patients for the selected date
   const { filteredPatients, filteredDate } = await filterPatientsByDate(dateString);
+  const { filteredOrdonances, filteredDate2 } = await filterOrdonancesByDate(dateString);
   // Update state with filtered patients
   setPatientCount(filteredPatients['hydra:member'].length);
+  setOrdonanceCount(filteredOrdonances['hydra:member'].length);
+
 
 };
-console.log(patients)
+const handleDateChange2 = async (dates, dateStrings) => {
+  const [strictlyAfterDate, strictlyBeforeDate] = dateStrings; // Destructure the dateStrings array
+  // Filter patients for the selected date range
+  setSelectedDate2(dateStrings); // Update selected date
+
+  const { filteredPatients2, filteredStartDate, filteredEndDate } = await filterPatientsByDate2(strictlyAfterDate, strictlyBeforeDate);
+  setPatientCount(filteredPatients2['hydra:member'].length);
+
+  const { filteredOrdonances2, filteredStartDate2, filteredEndDate2 } = await filterOrdonancesByDate2(strictlyAfterDate, strictlyBeforeDate);
+  // Update state with filtered patients
+  setOrdonanceCount(filteredOrdonances2['hydra:member'].length);
+  console.log(filteredPatients2['hydra:member']);
+};
+
 
 // Render the filtered patients
 
@@ -92,16 +170,9 @@ console.log(patients)
 
 
     // Get filtered patients based on the selected date
-    const filteredPatients = filterPatientsByDate(selectedDate);
+    const filteredPatients2 = filterPatientsByDate2(selectedDate);
+
   
-  const {
-    
-    ordonanceCount,
-    rendezvousCount,
-    examentestCount,
-    examenresultatCount,
-    
-  } = data;
   
 
   const handleCountTodayClick = () => {
@@ -115,10 +186,17 @@ console.log(patients)
   const handleReset = () => {
 
     setPatientCount(data.patientCount);
+    setOrdonanceCount(data.ordonanceCount)
+    setSelectedDate(null); // Clear the selected date
+setSelectedDate2([]);
+if (datePickerRef.current) {
+  datePickerRef.current.picker.clearSelection();
+}
 
-    
 
   };
+  // Function to handle date clearing
+
   const buttonContainerStyle = {
     display: 'flex',
     gap: '10px',
@@ -139,7 +217,16 @@ console.log(patients)
         <Typography.Title level={4}>Tableau de bord</Typography.Title>
      
         <div style={buttonContainerStyle}>
-        <DatePicker onChange={handleDateChange} />
+        <DatePicker
+        onChange={handleDateChange}
+      
+      />
+      <DatePicker.RangePicker
+        onChange={handleDateChange2}
+     
+       
+      />
+
 
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={handleCountTodayClick}>Année</button>
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={handleCountTodayClick}>Mois</button>
